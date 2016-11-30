@@ -9,10 +9,9 @@ body {
 }
 a {
 	color: #2484c1;
-	text-decoration: none;
 }
 a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 img {
     display: block;

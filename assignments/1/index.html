@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Assignment 1</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+    <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script type="text/javascript">
+        window.onload=function(){
+            var img = document.createElement("img");
+            img.setAttribute("src", "graphs.png");
+            document.getElementById("num").appendChild(img);
+        }
+    </script>
+
+  </head>
+
+<body>
+  <h1>Assignment 1</h1>
+  <p>
+    The goal of assignment one was to show knowledge af <em>html</em>, below
+    as a brief explanation of how this page was created.
+  <hr>
+  <ul>
+    <li>
+        <h5>The style of the page.</h5>
+        Instead of creating a <code>&ltstyle&gt</code> tag in the head of the page,
+        I opted to create a separate stylesheet, this has the benefit that it's
+        easier to reuse since it only takes the following line to add it to each
+        page.<br>
+        <code>&ltlink rel="stylesheet" type="text/css" href="../../style.css"&gt</code><br>
+        The style sheet contains selected pieces of code from the <a href="https://github.com/jasonm23/markdown-css-themes/blob/gh-pages/foghorn.css">
+        foghorn.css</a> sheet.
+    <li>
+        Below is an image of a table that contains Anscombe's quartet, which is
+        a set of four datasets that has the same variance and mean.
+        <img src="table.png" />
+    </li>
+    <li>
+        The data in Anscombe's quartet although similar <strong id="num">is not the same
+        data sets</strong>
+
+        As seen in the image above
+    </li>
+  </ul>
+  <h2>An example of two interactive visualization</h2>
+  <ol>
+      <li><a href="http://scaleofuniverse.com">Scale of the universe</a>
+      <p>The site shows just how much size differs in the universe, on one
+          extreme we have the <em>planck length</em> which has a size of $10^{-35}$ meters,
+          and on the other side of the spectrum we have the estimated size of the universe
+          which has a size of $10^{27}$ meters. This massive interval can be hard
+          to understand and we easily dismiss the difference between $10^{-15}$
+          and $10^{-10}$ since we are presented with so much information.
+
+          By having a scroll bar at the bottom we see just how big the difference
+          in size is between for instance a helium atom and a proton.
+
+          The visualization has pleasing aesthetics, my biggest problem with it
+          is that it plays music. This should not be on by default since it
+          draws attention away from the visualization and is bad UX.</p> </li>
+
+      <li><a href="https://www.gapminder.org/tools/#_chart-type=bubbles">Gapminder</a>
+        <p>This visualization is made by Gapminder which was founded by Hans Rosling.
+          This is a very advanced visualization that allows the user to quickly
+          get an overview of the data and see that the larger incomes means a
+          longer life expectancy. The use of colors show a grouping by continent
+          and a user can hover their mouse over a circle to get the exact country.
+
+          The most powerfull feature of the visualization is the play button
+          in the lower left corner, it plays the animation over time and tells
+          a story with the data, showing for instance how the second world war
+          affected the income and life expectancy per country.
+        </p>
+      </li>
+  </ol>
+
+  <h2>My interactive visualization</h2>
+    By the end of this course i would like to be able to visualize connections
+    between objects. This could be realtions in a database, dependencies between
+    different software libraries, etc. A similar visualization is the <em><a href="http://www.wolframalpha.com/facebook/"></a>
+    wolfram alpha facebook report</em>
+    <img src="wolfram.png">
+    It creates a network of ones facebook friends and shows which group of
+    friends exists.
+
+    The visualization of software dependencies is aimed at developers and
+    shows them how each library has evolved over time, a software project like
+    <em>node.js</em> would most likely start out with very few connections and
+    over time aggregate a lot more connections. Indicating that it is an
+    active framework. It would also be expected that there would be a lot of
+    one to many connections and these would appear and disappear frequently. 
+</body>
+</html>

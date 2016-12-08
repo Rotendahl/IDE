@@ -40,9 +40,10 @@ div.tooltip {
 function name(d) { return d.name; }
 
 var color = d3.scale.category10();
+function colorByGroup(d) { return color(group(d)); }
 
-var width = 1500,
-    height = 1000;
+var width = 3000,
+    height = 1500;
 
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -75,9 +76,10 @@ function recenterVoronoi(nodes) {
 }
 
 var force = d3.layout.force()
-    .charge(-2000)
+    .gravity(0.5)
+    .charge(-1000)
     .friction(0.3)
-    .linkDistance(50)
+    .distance(50)
     .size([width, height]);
 
 force.on('tick', function() {
@@ -110,12 +112,6 @@ d3.json('../../data/data.json', function(err, data) {
         d.id = i;
     });
 
-    link = svg.selectAll('.link')
-        .data( data.links )
-      .enter().append('line')
-        .attr('class', 'link')
-        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-
     node = svg.selectAll('.node')
         .data( data.nodes )
       .enter().append('g')
@@ -125,24 +121,51 @@ d3.json('../../data/data.json', function(err, data) {
             div.transition()
                 .duration(200)
                 .style("opacity", .9);
-            div	.html(d.name)
+            div.html(d.name)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
             })
         .on("mouseout", function(d) {
             div.transition()
                 .duration(500)
+                .style("opacity", 0);
                 })
-        .call( force.drag );
+        .call(force.drag );
 
     node.append('circle')
         .attr('r', 30)
+//        .attr('fill', colorByGroup)
         .attr('fill', 'blue')
         .attr('fill-opacity', 0.5);
 
     node.append('circle')
         .attr('r', 4)
         .attr('stroke', 'black');
+
+    node.append("text")
+        .attr("dx", 12)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.name });
+
+
+    link = svg.selectAll('.link')
+        .data( data.links )
+      .enter().append('line')
+        .attr('class', 'link')
+        .style("stroke-width", function(d) { return 10 })
+        .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.html(d.title)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+            })
+        .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+                });
 
     force
         .nodes( data.nodes )

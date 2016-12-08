@@ -3,8 +3,8 @@
 <meta name="author" content="Benjamin Rotendahl && Lasse Ahlbech Madsen">
 <html>
   <head>
-    <style>
     <link rel="stylesheet" type="text/css" href="../../style.css">
+    <style>
 .node {
   opacity: 0.5;
 }
@@ -82,7 +82,7 @@ div.tooltip {
 function name(d) { return d.name; }
 
 var color = d3.scale.category10();
-function colorByGroup(d) { return color(group(d)); }
+function colorByGroup(d) { return color(d.group); }
 
 var width = 1800,
     height = 1500;
@@ -96,7 +96,7 @@ var svg = d3.select('#viz')
     .attr('width', width)
     .attr('height', height);
 
-var node, link;
+var link, node
 
 var voronoi = d3.geom.voronoi()
     .x(function(d) { return d.x; })
@@ -118,15 +118,17 @@ function recenterVoronoi(nodes) {
 }
 
 var force = d3.layout.force()
-    .gravity(0.5)
-    .charge(-1000)
-    .friction(0.1)
+    .linkStrength(0.5)
+    .gravity(0.03)
+    .charge(-500)
+    .friction(0.9)
     .distance(100)
     .size([width, height]);
 
 force.on('tick', function() {
-    node.attr('transform', function(d) { return 'translate('+d.x+','+d.y+')'; })
-        .attr('clip-path', function(d) { return 'url(#clip-'+d.index+')'; });
+    node.attr('transform', function(d) { return 'translate('+d.x+','+d.y+')';
+        });
+       // .attr('clip-path', function(d) { return 'url(#clip-'+d.index+')'; });
 
     link.attr('x1', function(d) { return d.source.x; })
         .attr('y1', function(d) { return d.source.y; })
@@ -147,7 +149,8 @@ force.on('tick', function() {
 });
 
 
-d3.json('../../data/data.json', function(err, data) {
+//d3.json('../../data/data.json', function(err, data) {
+d3.json('../../data/data2Deg.json', function(err, data) {
 
     data.nodes.forEach(function(d, i) {
         d.id = i;
@@ -175,30 +178,19 @@ d3.json('../../data/data.json', function(err, data) {
 
     node.append('circle')
         .attr('r', 30)
-//        .attr('fill', colorByGroup)
-        .attr('fill', function(d){
-                if(d.group === 1){return "green";}
-                else if(d.group === 2){return "blue";}
-                else if(d.group === 3){return "orange";}
-                else{return "red";}
-        })
+        .attr('fill', colorByGroup)
         .attr('fill-opacity', 0.5);
 
     node.append('circle')
         .attr('r', 4)
         .attr('stroke', 'black');
 
-    node.append("text")
-        .attr("dx", 12)
-        .attr("dy", ".35em")
-        .text(function(d) { return d.name });
-
 
     link = svg.selectAll('.link')
         .data( data.links )
       .enter().append('line')
         .attr('class', 'link')
-        .style("stroke-width", "2")
+        .style("stroke-width", "5")
         .on("mouseover", function(d) {
             div.transition()
                 .duration(200)
@@ -217,6 +209,11 @@ d3.json('../../data/data.json', function(err, data) {
         .nodes( data.nodes )
         .links( data.links )
         .start();
+
+    node.append("text")
+        .attr("dx", 12)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.name });
 });
 
     </script>

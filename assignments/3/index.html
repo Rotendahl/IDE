@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-
+<meta name="author" content="Benjamin Rotendahl && Lasse Ahlbech Madsen">
 <html>
   <head>
     <style>
-
+    <link rel="stylesheet" type="text/css" href="../../style.css">
 .node {
   opacity: 0.5;
 }
@@ -34,6 +34,48 @@ div.tooltip {
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
   <body>
+    <h1>Assignment 3</h1>
+    <h2>Part 1: Review</h2>
+    <p>
+    We only just formed our group, but we chose the group to review based on
+    Benjamin's assignment 2. So we reviewed Benjamin Egelund-Müller's
+    <a href=
+      "https://bem7.github.io/interactive-data-exploration-2016/project2/">
+    assignment. 
+    </a>
+    </p>
+    <p>
+    <b>
+    Positive: The heatmap is surprisingly efficient at showing the change in
+    temperature over the last century.
+    </b>
+    </p>
+    <p>
+    <b>
+    Negative: The heatmap lacks an accompanying scale. While we can guess that
+    blue is cool, white neutral and red hot, this is not immediately clear from
+    the visualization.
+    </b>
+    </p>
+
+    <h2>Part 2: Network/tree data</h2>
+    <p>
+    We chose to work with <a href="fun link">movie data</a> to make a graph
+    showing how actors are "connected" by movies. The dataset we found had movie
+    names, three leading actors and a bunch of data we were not interested in.
+    This means for all movies we would have a triangle of the three leads. In
+    practice we had too much data, particularly since we did not make a static
+    graph but instead a dynamic graph which recreates every time and supports
+    dragging actors around. 
+    </p>
+    <p>
+    First we attempted to reduce the graph by only choosing movies from the last
+    couple of years, but this resulted in very sparse graphs. Instead we chose
+    to base our graph around a single actor, namely Robert Downey Jr.  and his 
+    connections to other actors. We color actors depending on their 'distance'
+    to Downey and the result is a dense and interesting graph. Hovering with the
+    mouse over an edge shows what movie makes the connection.
+    </p>
     <div id="viz"></div>
     <script>
 
@@ -42,7 +84,7 @@ function name(d) { return d.name; }
 var color = d3.scale.category10();
 function colorByGroup(d) { return color(group(d)); }
 
-var width = 3000,
+var width = 1800,
     height = 1500;
 
 var div = d3.select("body").append("div")
@@ -164,12 +206,12 @@ d3.json('../../data/data.json', function(err, data) {
             div.html(d.title)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
-            })
+        })
         .on("mouseout", function(d) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
-                });
+        });
 
     force
         .nodes( data.nodes )

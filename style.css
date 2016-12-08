@@ -34,9 +34,23 @@ code {
 .containerDiv {
     margin: auto;
     display: block;
-    width: 500px;
+
 }
 
 img {
     width: 500px;
+}
+
+
+#vis{
+    text-align: center;
+}
+
+#svgMain {
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+    border: 3px solid black;
+    position: absolute;
+    left: 50px;
 }

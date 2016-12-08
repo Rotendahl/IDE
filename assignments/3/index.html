@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<meta name="author" content="Benjamin Rotendahl && Lasse Ahlbech Madsen">
+<meta name="author" content="Benjamin Rotendahl &amp; Lasse Ahlbech Madsen">
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="../../style.css">
     <style>
-.node {
-  opacity: 0.5;
-}
-div.tooltip {
-    position: absolute;
-    text-align: center;
-    width: 60px;
-    height: 28px;
-    padding: 2px;
-    font: 12px sans-serif;
-    background: lightsteelblue;
-    border: 0px;
-    border-radius: 8px;
-    pointer-events: none;
-}
+      .node {
+        opacity: 0.5;
+      }
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 60px;
+        height: 28px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
 
-.node:hover {
-  opacity: 1;
-}
+      .node:hover {
+        opacity: 1;
+      }
 
-.link {
-  stroke: #999;
-  stroke-opacity: 0.3;
-}
-
+      .link {
+        stroke: #999;
+        stroke-opacity: 0.3;
+      }
     </style>
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
@@ -37,75 +36,81 @@ div.tooltip {
     <h1>Assignment 3</h1>
     <h2>Part 1: Review</h2>
     <p>
-    We only just formed our group, but we chose the group to review based on
-    Benjamin's assignment 2. So we reviewed Benjamin Egelund-Müller's
-    <a href=
+      We only just formed our group, but we chose the group to review based on
+      Benjamin's assignment 2. So we reviewed Benjamin Egelund-Müller's
+      <a href=
       "https://bem7.github.io/interactive-data-exploration-2016/project2/">
-    assignment. 
-    </a>
+      assignment.</a>
     </p>
     <p>
-    <b>
-    Positive: The heatmap is surprisingly efficient at showing the change in
-    temperature over the last century.
-    </b>
+      <b>
+        Positive: The heatmap is surprisingly efficient at showing the change in
+        temperature over the last century.
+      </b>
     </p>
     <p>
-    <b>
-    Negative: The heatmap lacks an accompanying scale. While we can guess that
-    blue is cool, white neutral and red hot, this is not immediately clear from
-    the visualization.
-    </b>
+      <b>
+        Negative: The heatmap lacks an accompanying scale. While we can guess
+        that blue is cool, white neutral and red hot, this is not immediately
+        clear from the visualization.
+      </b>
     </p>
 
     <h2>Part 2: Network/tree data</h2>
     <p>
-    We chose to work with <a href="fun link">movie data</a> to make a graph
-    showing how actors are "connected" by movies. The dataset we found had movie
-    names, three leading actors and a bunch of data we were not interested in.
-    This means for all movies we would have a triangle of the three leads. In
-    practice we had too much data, particularly since we did not make a static
-    graph but instead a dynamic graph which recreates every time and supports
-    dragging actors around. 
+      We chose to work with
+      <a href="https://www.kaggle.com/deepmatrix/imdb-5000-movie-dataset">
+      movie data</a> to make a graph showing how actors are "connected" by
+      movies. The dataset we found had movie names, three leading actors and a
+      bunch of data we were not interested in. This means for all movies we
+      would have a triangle of the three leads. In practice we had too much data,
+      particularly since we did not make a static graph but instead a dynamic
+      graph which recreates every time and supports dragging actors around.
     </p>
     <p>
-    First we attempted to reduce the graph by only choosing movies from the last
-    couple of years, but this resulted in very sparse graphs. Instead we chose
-    to base our graph around a single actor, namely Robert Downey Jr.  and his 
-    connections to other actors. We color actors depending on their 'distance'
-    to Downey and the result is a dense and interesting graph. Hovering with the
-    mouse over an edge shows what movie makes the connection.
+      First we attempted to reduce the graph by only choosing movies from the
+      last couple of years, but this resulted in very sparse graphs. Instead we
+      chose to base our graph around a single actor, namely Robert Downey Jr.
+      and his connections to other actors. We color actors depending on their
+      'distance' to Downey and the result is a dense and interesting graph.
+      Hovering with the mouse over an edge shows what movie makes the connection.
+    </p>
+    <p>
+      
     </p>
     <div id="viz"></div>
+
     <script>
+    function name(d) { return d.name; }
 
-function name(d) { return d.name; }
 
-var color = d3.scale.category10();
-function colorByGroup(d) { return color(d.group); }
+    var color = d3.scale.category10();
+    function colorByGroup(d) { return color(d.group); }
 
-var width = 1800,
-    height = 1500;
+    var width = window.innerWidth-100, height = 1500, radius = 30;
 
-var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
 
-var svg = d3.select('#viz')
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height);
+    var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
-var link, node
+    var svg = d3.select('#viz')
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .attr("align" , "center")
+      .attr("id" , "svgMain");
 
-var voronoi = d3.geom.voronoi()
-    .x(function(d) { return d.x; })
-    .y(function(d) { return d.y; })
-    .clipExtent([[-10, -10], [width+10, height+10]]);
+    var node, link;
 
-function recenterVoronoi(nodes) {
-    var shapes = [];
-    voronoi(nodes).forEach(function(d) {
+    var voronoi = d3.geom.voronoi()
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; })
+      .clipExtent([[-10, -10], [width+10, height+10]]);
+
+    function recenterVoronoi(nodes) {
+      var shapes = [];
+      voronoi(nodes).forEach(function(d) {
         if ( !d.length ) return;
         var n = [];
         d.forEach(function(c){
@@ -113,9 +118,10 @@ function recenterVoronoi(nodes) {
         });
         n.point = d.point;
         shapes.push(n);
-    });
+      });
     return shapes;
-}
+    }
+
 
 var force = d3.layout.force()
     .linkStrength(0.5)
@@ -130,35 +136,43 @@ force.on('tick', function() {
         });
        // .attr('clip-path', function(d) { return 'url(#clip-'+d.index+')'; });
 
-    link.attr('x1', function(d) { return d.source.x; })
+       node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width -
+            radius, d.x)); })
+        .attr("cy", function(d) { return d.y = Math.max(radius,
+            Math.min(height - radius, d.y)); });
+
+      link.attr('x1', function(d) { return d.source.x; })
         .attr('y1', function(d) { return d.source.y; })
         .attr('x2', function(d) { return d.target.x; })
         .attr('y2', function(d) { return d.target.y; });
 
-    var clip = svg.selectAll('.clip')
-        .data( recenterVoronoi(node.data()), function(d) { return d.point.index; } );
+      var clip = svg.selectAll('.clip').data(
+        recenterVoronoi(node.data()), function(d) { return d.point.index ;});
 
-    clip.enter().append('clipPath')
+      clip.enter().append('clipPath')
         .attr('id', function(d) { return 'clip-'+d.point.index; })
         .attr('class', 'clip');
-    clip.exit().remove()
 
-    clip.selectAll('path').remove();
-    clip.append('path')
-        .attr('d', function(d) { return 'M'+d.join(',')+'Z'; });
-});
+      clip.exit().remove()
 
+      clip.selectAll('path').remove();
+
+
+      clip.append('path')
+      .attr('d', function(d) { return 'M'+d.join(',')+'Z'; });
+    });
 
 //d3.json('../../data/data.json', function(err, data) {
 d3.json('../../data/data2Deg.json', function(err, data) {
 
-    data.nodes.forEach(function(d, i) {
-        d.id = i;
-    });
 
-    node = svg.selectAll('.node')
+      data.nodes.forEach(function(d, i) {
+        d.id = i;
+      });
+
+      node = svg.selectAll('.node')
         .data( data.nodes )
-      .enter().append('g')
+        .enter().append('g')
         .attr('title', name)
         .attr('class', 'node')
         .on("mouseover", function(d) {

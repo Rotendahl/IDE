@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Assignment 2</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="code.js"></script>
+  </head>
+
+<body>
+  <h1>Assignment 2</h1>
+  <p>
+    The goal of assignment one was to build two visualizations of a temperature
+    dataset for Copenhagen the raw data can be found <a href="http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_612061860000_14_0/station.txt">
+    here</a>.
+  <hr>
+    <h2>How has the weather changed over the years.</h2>
+    <div id="graph1" class="containerDiv">
+    <h2>Bar plot</h2> <p> Click on a quarter to see it - Refresh the page to pick a different one</p></div>
+    </div>
+    <hr>
+    <h2>Line plot</h2></div>
+    <svg id="visual" width="700" height="500"></svg>
+
+  <hr>
+    <h2>Motivation and method</h2>
+    <p>The goal of the two visualizations above is to show how the weather has
+    changed over the past 100 years.
+
+    The process of creating these visualization began with importing them into
+    excel and playing with the numbers. I then decided that the best way
+    to show how it changed was to take the average of each quarter and plot them
+    by year. The idea was to minimize outliers and show a more general trend.
+    </p>
+    <p>The Data is from Copenhagen</p>
+    <ul>
+      <li>
+        <strong>The Bar chart:</strong>
+        <p>
+        The bar chart was written from scratch
+        by me. The chart does not contain any numbers since the goal is to
+        show the change and not the actual temperature. For each quarter the
+        size of the bars are normalized, i.e a bar with size 100 in quarter one
+        has a different temperature than a bar with the same size in quarter two.
+        </p>
+
+        <p>
+        If the temperature hadn't changed over the last 100 years the bars would
+        all be roughly the same size. A good example of this is the 2. quarter,
+        the bars all have about the same size except two outliers, which means
+        that the temperature has remained somewhat constant.
+        </p>
+        <p>
+          This is not the case for the first quarter where it's easy to see that
+          recent years have bin much warmer than a 100 years ago. Since the
+          rest of the quarters have bin more stable this fact is not present in
+          the yearly view
+        </p>
+        <hr>
+        <h4>Improvements:</h4>
+          Had I bin more experienced in D3 I would have added a variable scale
+          that adjusted to the temperature for the different quarters and
+          display it with numbers. I would also have made it such that one would
+          not have to reload the page before clicking on a quarter.
+      </li>
+
+      <li><strong>The Line plot</strong>This line plot uses code from this <a href="http://bl.ocks.org/mbostock/3883245">
+      site</a>
+      This plot shows the general rising trend per year, it's very small but
+      it's there.  
+    </li>
+
+      <li><strong>Dynamic Elements</strong> The bar chart could be improved
+      by interactivity, here are some ideas that could improve it
+      <ol>
+          <li><strong>Animating the bars:</strong> When one opened the page
+          all bars should have the same size, when a quarter was clicked it should
+          animate the scaling proces.
+          <br>
+          This would emphasize the difference between the quarters since one
+          would see little differnce between Q2, Q3 and Q4 but Q1 would take
+          more time to scale and move the center line to add even more focus to it
+          </li>
+          <br>
+          <li><strong>Mouse over events:</strong> If one where to mouse over the
+            buttons it could overlay that quarter to the one currently selected
+            and highlight the difference to show the trend for each year.
+          </li>
+          <br>
+          <li><strong>Time slider:</strong> A slider that added data for one
+            more year and normalized the data again.
+          </li>
+      </ol>
+    </li>
+    </ul>
+</body>
+<script type="text/javascript">
+    // Code below is from http://bl.ocks.org/mbostock/3883245
+    var svg = d3.select("#visual")
+        ,margin = {top: 20, right: 20, bottom: 30, left: 50}
+        ,width = +svg.attr("width") - margin.left - margin.right
+        ,height = +svg.attr("height") - margin.top - margin.bottom
+        ,g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top
+        + ")");
+
+
+    var x = d3.scaleLinear().rangeRound([0, width]);
+    var y = d3.scaleLinear().rangeRound([height, 0]);
+
+    var line = d3.line().x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.temp); });
+
+    d3.csv("../../data/weather1.csv", function(d) {
+    //d.date = parseTime(d.date);
+    d.year = parseInt(d.YEAR);
+    if(typeof(parseFloat(d.YEAR)) === "number"    &&
+       typeof(parseFloat(d[" JAN"])) === "number" &&
+       typeof(parseFloat(d[" FEB"])) === "number" &&
+       typeof(parseFloat(d[" MAR"])) === "number" &&
+       typeof(parseFloat(d[" APR"])) === "number" &&
+       typeof(parseFloat(d[" MAY"])) === "number" &&
+       typeof(parseFloat(d[" JUN"])) === "number" &&
+       typeof(parseFloat(d[" JUL"])) === "number" &&
+       typeof(parseFloat(d[" AUG"])) === "number" &&
+       typeof(parseFloat(d[" SEP"])) === "number" &&
+       typeof(parseFloat(d[" OCT"])) === "number" &&
+       typeof(parseFloat(d[" NOV"])) === "number" &&
+       typeof(parseFloat(d[" DEC"])) === "number"){
+           var temperature =  0.0
+           temperature += parseFloat(d[" JAN"]);
+           temperature += parseFloat(d[" FEB"]);
+           temperature += parseFloat(d[" MAR"]);
+           temperature += parseFloat(d[" APR"]);
+           temperature += parseFloat(d[" MAY"]);
+           temperature += parseFloat(d[" JUN"]);
+           temperature += parseFloat(d[" JUL"]);
+           temperature += parseFloat(d[" AUG"]);
+           temperature += parseFloat(d[" SEP"]);
+           temperature += parseFloat(d[" OCT"]);
+           temperature += parseFloat(d[" NOV"]);
+           temperature += parseFloat(d[" DEC"]);
+           d.temp = temperature / 12.0;
+       }
+       return d;
+    }
+    ,
+    function(error, data) {
+        if (error) throw error;
+
+        x.domain(d3.extent(data, function(d) {return d.year; }));
+        y.domain(d3.extent(data, function(d) {return d.temp; }));
+
+        g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+        g.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y))
+        .append("text")
+        .attr("fill", "#000")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", "0.71em")
+        .style("text-anchor", "end")
+        .text("Temperature - Celcius");
+
+        g.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
+    });
+</script>
+</html>

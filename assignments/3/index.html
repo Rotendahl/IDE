@@ -78,8 +78,8 @@ function recenterVoronoi(nodes) {
 var force = d3.layout.force()
     .gravity(0.5)
     .charge(-1000)
-    .friction(0.3)
-    .distance(50)
+    .friction(0.1)
+    .distance(100)
     .size([width, height]);
 
 force.on('tick', function() {
@@ -105,7 +105,6 @@ force.on('tick', function() {
 });
 
 
-//d3.json('miserables.json', function(err, data) {
 d3.json('../../data/data.json', function(err, data) {
 
     data.nodes.forEach(function(d, i) {
@@ -135,7 +134,12 @@ d3.json('../../data/data.json', function(err, data) {
     node.append('circle')
         .attr('r', 30)
 //        .attr('fill', colorByGroup)
-        .attr('fill', 'blue')
+        .attr('fill', function(d){
+                if(d.group === 1){return "green";}
+                else if(d.group === 2){return "blue";}
+                else if(d.group === 3){return "orange";}
+                else{return "red";}
+        })
         .attr('fill-opacity', 0.5);
 
     node.append('circle')
@@ -152,7 +156,7 @@ d3.json('../../data/data.json', function(err, data) {
         .data( data.links )
       .enter().append('line')
         .attr('class', 'link')
-        .style("stroke-width", function(d) { return 10 })
+        .style("stroke-width", "2")
         .on("mouseover", function(d) {
             div.transition()
                 .duration(200)

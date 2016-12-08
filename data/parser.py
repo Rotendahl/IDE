@@ -17,20 +17,21 @@ links  = []
 movies.pop(0)
 
 for entry in movies:
-    if not(entry[0] in actors):
+    if not(entry[0] in actorsIndex):
         actors.append({'name' : entry[0]})
         actorsIndex.append(entry[0])
-    if not(entry[1] in actors):
+    if not(entry[1] in actorsIndex):
         actors.append({'name' : entry[1]})
         actorsIndex.append(entry[1])
-    if not(entry[3] in actors):
+    if not(entry[3] in actorsIndex):
         actors.append({'name' : entry[3]})
         actorsIndex.append(entry[3])
+print actorsIndex
 
 for entry in movies:
     links.append({
         'title'  : entry[2],
-        'source' : actors.index(entry[0]),
+        'source' : actorsIndex.index(entry[0]),
         'target' : actorsIndex.index(entry[1]),
         'value'  : 1
     })

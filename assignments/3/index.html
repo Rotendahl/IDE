@@ -65,15 +65,23 @@
       bunch of data we were not interested in. This means for all movies we
       would have a triangle of the three leads. In practice we had too much data,
       particularly since we did not make a static graph but instead a dynamic
-      graph which recreates every time and supports dragging actors around.
+      graph which recreates every time the page is loaded and it supports
+      dragging actors around.
     </p>
     <p>
+      As a base for our code we used <a href=
+        "http://bl.ocks.org/couchand/6420534">this example</a>.
       First we attempted to reduce the graph by only choosing movies from the
       last couple of years, but this resulted in very sparse graphs. Instead we
       chose to base our graph around a single actor, namely Robert Downey Jr.
       and his connections to other actors. We color actors depending on their
       'distance' to Downey and the result is a dense and interesting graph.
-      Hovering with the mouse over an edge shows what movie makes the connection.
+      Hovering with the mouse over an edge shows which movie makes the
+      connection. The visualization is not without issues. We wanted to keep it
+      relatively small which in turn squeezed the nodes closer that they had to
+      be. It also forced us to limit the graph to actors who were no more than 2
+      degrees from Robert Downey Jr..
+
     </p>
     <p>
       <strong>Parsing the data:</strong> To make get the data to an usable
@@ -108,6 +116,19 @@
       group 1. <br>
       These groups are represented by their color in the visualization since
       the color channel is good at expressing categories.
+    </p>
+    <p>
+
+    </p>
+    <p>
+    A cool extension would be the ability to select an actor in the graph and a
+    new graph would be created with that actor in the center. This would make us
+    able to display the entire dataset without the issue of cluttering the
+    visualization with too many names. However with the way we are currently
+    creating the dataset this would be immensely costly. Another feature would be
+    the ability to change some of the variables used in the force layout. This
+    would not be particularly useful, but it would make the users understand
+    that we have spent a lot of time tweaking the numbers.
     </p>
     <div id="viz"></div>
 
@@ -193,7 +214,6 @@ force.on('tick', function() {
       .attr('d', function(d) { return 'M'+d.join(',')+'Z'; });
     });
 
-//d3.json('../../data/data.json', function(err, data) {
 d3.json('../../data/data2Deg.json', function(err, data) {
 
 

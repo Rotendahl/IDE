@@ -3,6 +3,20 @@
   <head>
     <title>Assignment 2</title>
     <link rel="stylesheet" type="text/css" href="../../style.css">
+    <style>
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 100px;
+        height: 14px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
+    </style>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
     </script>
@@ -19,6 +33,10 @@
     The goal of assignment one was to build two visualizations of a temperature
     dataset for Copenhagen the raw data can be found <a href="http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_612061860000_14_0/station.txt">
     here</a>.
+
+
+    <div id="vis"></div>
+
 
 </body>
 </html>

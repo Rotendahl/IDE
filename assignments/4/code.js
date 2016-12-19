@@ -170,9 +170,8 @@ function init() {
                   .duration(500)
                   .style("opacity", 0);
             })
-            .on('click', function(){
-                currentHandIndex = Math.floor(Math.random()*hands.length)
-                console.log("Current Index: "  + currentHandIndex);
+            .on('click', function(d, i){
+                currentHandIndex = i;
                 hand = hands[currentHandIndex];
 
                 handLines.selectAll('line').data(hand)

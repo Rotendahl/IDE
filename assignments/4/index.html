@@ -35,9 +35,33 @@
 
 <body>
 <div id="header" class="text">
-    The goal of assignment one was to build two visualizations of a temperature
-    dataset for Copenhagen the raw data can be found <a href="http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_612061860000_14_0/station.txt">
-        here</a>.
+    Below we have made a visualization of a dataset consisting of outlines of
+    hands. The dataset has 40 hands with 112 dimensions, that is 56 points with
+    an x- and y-coordinate. In the left graph you can see the outline of a one
+    of the hands. This is pretty cool in itself, but want we want to showcase if
+    is the utility of Principal Component Analysis (PCA). <br>
+    PCA is a statistical method which
+    reduces a dataset to fewer dimensions and orders the dimensions from most
+    significant to least significant. For our visualization we have reduced the
+    number of dimensions from 112 to 40. As we know the two first dimensions 
+    are the most significant we can plot these and expect it to be meaningful.
+    This is the rightmost plot. <br>
+    In this plot you can hover over the individual points and see the values of
+    the pair and which hand number it is. If you click a point the matching hand
+    will be drawn in the left plot. Now the interesting thing is what these
+    coordinates says about the hand. Remember that we have reduced a hand
+    consisting of 112 coordinates to just 2 coordinates. <br>
+    If you select the rightmost points the fingers of the corresponding hands
+    are pretty close to each other and are pointing straight left. Conversely
+    the hands on the left side of the graph are spread. If we look at the lone
+    point in the bottom right, its lower fingers are tight together while the
+    other fingers are far apart. The hand at the top of the graph have the top
+    right fingers close together while the bottom two are spread. In the middle
+    of the graph the fingers are in similar positions. <br>
+    So to sum it up. We have used PCA to reduce our dataset to just two
+    points per hands, these coordinates have no intrinsic meaning and yet when
+    we plot the initial dataset we see that we can make a good guess at the look
+    of the matching hands based on the value of our two principal components.
     <hr>
 </div>
 

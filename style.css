@@ -1,6 +1,5 @@
 html {
     margin:auto;
-    max-width:42em;
     background:#fefefe;
 }
 body {
@@ -17,6 +16,11 @@ img {
     display: block;
     width: 200;
     height: 200;
+    margin: auto;
+}
+
+.text{
+    max-width:42em;
     margin: auto;
 }
 
@@ -42,6 +46,7 @@ img {
 }
 
 
+
 #vis{
     text-align: center;
 }
@@ -53,4 +58,4 @@ img {
     border: 3px solid black;
     position: absolute;
     left: 50px;
-}
+}*/

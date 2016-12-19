@@ -1,8 +1,9 @@
 d3.select(window).on('load', init);
 
-var w = 500;
-var h = 600;
-
+var w;
+console.log(w)
+var h = 700;
+var padding = 20;
 
 var hands = [];
 var currentHandIndex = 0;
@@ -14,11 +15,12 @@ var yScale;
 var handCircles;
 var handLines;
 var handFigure;
+var pointGroup;
 
 
-var primaryColor   = "#4c6aff"
-var secondaryColor = "#4cc3ff"
-var complemColor   = "#ff884c"
+var primaryColor   = "#4c6aff";
+var secondaryColor = "#4cc3ff";
+var complemColor   = "#ff884c";
 
 var lineWidth = 3;
 var cirleRad  = 4;
@@ -35,7 +37,8 @@ function parseHand(hand){
     }
 
 function init() {
-    var svg = d3.select("#vis").append('svg').attr("width",w).attr('height',h);
+    w = document.getElementById('handViz').offsetWidth;
+    var svg = d3.select("#handViz").append('svg').attr("width",w).attr('height',h);
     var my_data = d3.text("../../data/hands.csv", function(text){
         var data = d3.csv.parseRows(text).map(function(row) {
         return row.map(function(value) { return +value ;});
@@ -45,19 +48,32 @@ function init() {
             hands[i] = parseHand(data[i]);
         }
 
+        var xMin = d3.min(hands, function(d){return d3.min(d, function(h){
+            return h.x;})});
+        var xMax = d3.max(hands, function(d){return d3.max(d, function(h){
+            return h.x;})});
+
         xScale = d3.scale.linear()
-        .domain([0, d3.max(hands, function(d){
-            return d3.max(d, function(h){return h.x;})
-        })])
-        .range([0, w]);
+
+
+        .domain([xMin, xMax])
+        .range([0, w / 2]);
 
         yScale = d3.scale.linear()
-        .domain([0, d3.max(hands, function(d){
+        .domain([0.10, d3.max(hands, function(d){
             return d3.max(d, function(h){return h.y;})
         })])
         .range([0, h]);
 
         hand = hands[currentHandIndex];
+
+        svg.append('line')
+        .attr('x1', w/2)
+        .attr('x2', w/2)
+        .attr('y1', 0)
+        .attr('y2', h)
+        .attr('stroke-width', 2)
+        .attr('stroke', complemColor)
 
         handFigure = svg.append('g').attr("id", "handFigure");
 
@@ -91,6 +107,71 @@ function init() {
         .attr('cy', function(d){return yScale(d.y); })
         .attr("fill", primaryColor);
 
+
+    });
+
+
+    var my_data1 = d3.text("../../data/hands_pca.csv", function(text){
+        var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+        var data = d3.csv.parseRows(text).map(function(row) {
+            return row.map(function(value) {
+                return +value;
+            });
+        });
+
+
+        data = d3.transpose(data);
+
+        data = data.slice(0,40);
+
+        var minX= d3.min(data[0], function(d) {
+                  return +d;} );
+        var maxX= d3.max(data[0], function(d) {
+                  return +d;} );
+        var minY= d3.min(data[1], function(d) {
+                  return +d;} );
+        var maxY= d3.max(data[1], function(d) {
+                  return +d;} );
+        console.log(minX);
+        console.log(maxX);
+        console.log(minY);
+        console.log(maxY);
+
+
+        var sx = d3.scale.linear()
+            .domain([minX,maxX])
+            .range([w/2, w]);
+
+        var sy = d3.scale.linear()
+            .domain([minY,maxY])
+            .range([h,0]);
+
+
+        pointGroup = svg.append('g').attr("id", "pointGroup");
+
+        pointGroup.selectAll('circle')
+            .data(data)
+          .enter().append('circle')
+            .attr('r', '5')
+            .attr('cx', function(d){ return sx(d[0]); })
+            .attr('cy', function(d){ return sy(d[1]); })
+            .style("fill", "red")
+            .on("mouseover", function(d) {
+              div.transition()
+                  .duration(200)
+                  .style("opacity", .9);
+              div .html("(" + d3.round(d[0],2) + ", " + d3.round(d[1],2) + ")")
+                  .style("left", (d3.event.pageX) + "px")
+                  .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+              div.transition()
+                  .duration(500)
+                  .style("opacity", 0);
+            });
 
     });
 

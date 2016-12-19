@@ -3,7 +3,29 @@
   <head>
     <title>Assignment 2</title>
     <link rel="stylesheet" type="text/css" href="../../style.css">
-    <link rel="stylesheet" type="text/css" href="assign.css">
+    <style>
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 100px;
+        height: 14px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
+
+      #handViz{
+          border: 2px solid #ff884c;
+          margin: auto;
+          width: 90%;
+          padding: 0;
+          top: 0;
+          left: 0;
+      }
+    </style>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
     </script>
@@ -15,14 +37,24 @@
   </head>
 
 <body>
-  <h1>Assignment 4</h1>
-  <p>
+<div id="header" class="text">
     The goal of assignment one was to build two visualizations of a temperature
     dataset for Copenhagen the raw data can be found <a href="http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_612061860000_14_0/station.txt">
-    here</a>.
+        here</a>.
+    <hr>
+</div>
 
+<div id="handViz"></div>
+
+
+<div id="content" class="text">
     <h6 id="newHand"> Click here to pick a new hand </h6>
-    <div id="vis"></div>
+    <p>
+        The goal of assignment one was to build two visualizations of a temperature
+        dataset for Copenhagen the raw data can be found <a href="http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_612061860000_14_0/station.txt">
+            here</a>.
+
+</div>
 
 
 </body>

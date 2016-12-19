@@ -165,11 +165,36 @@ function init() {
 
     });
 
-    d3.select("#content").on('mouseover', function(){
-        currentHandIndex = 10;
+    d3.select("#rightPoint").on('mouseover', function(){
+        currentHandIndex = 35;
         hand = hands[currentHandIndex];
         updateHand();
     })
+
+    d3.select("#leftPoint").on('mouseover', function(){
+        currentHandIndex = 30;
+        hand = hands[currentHandIndex];
+        updateHand();
+    })
+
+    d3.select("#lowleft").on('mouseover', function(){
+        currentHandIndex = 39;
+        hand = hands[currentHandIndex];
+        updateHand();
+    })
+
+    d3.select("#top").on('mouseover', function(){
+        currentHandIndex = 37;
+        hand = hands[currentHandIndex];
+        updateHand();
+    })
+
+    d3.select("#mid").on('mouseover', function(){
+        currentHandIndex = 7;
+        hand = hands[currentHandIndex];
+        updateHand();
+    })
+
 
 
     var my_data1 = d3.text("../../data/hands_pca.csv", function(text){

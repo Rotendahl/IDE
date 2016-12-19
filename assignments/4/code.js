@@ -36,6 +36,61 @@ function parseHand(hand){
         return points;
     }
 
+
+var updateHand = function(){
+    handLines.selectAll('line').data(hand)
+    .transition()
+    .duration(500)
+    .ease("elastic")
+    .each("start", function(){
+        d3.select(this)
+        .attr('stroke-width', lineWidth * 2)
+        .attr("stroke", complemColor);})
+        .attr('x1', function(d, i){
+            if(i > 0){
+                return xScale(hands[currentHandIndex][i-1].x);
+            }
+            else{
+                return xScale(d.x);
+            }
+            })
+        .attr('y1', function(d, i){
+            if(i > 0){
+                return yScale(hands[currentHandIndex][i-1].y);
+            }
+            else{
+                return yScale(d.y);
+            }
+        })
+        .attr('x2', function(d){ return xScale(d.x)})
+        .attr('y2', function(d){ return yScale(d.y)
+    })
+    .each('end', function(){
+        d3.select(this)
+        .transition()
+        .duration(100)
+        .attr('stroke-width', lineWidth)
+        .attr('stroke', secondaryColor)}
+    );
+
+    handCircles.selectAll('circle').data(hand)
+    .transition()
+    .duration(500)
+    .ease("elastic")
+    .each("start", function(){d3.select(this)
+            .attr('r', cirleRad*2)
+            .attr("fill", complemColor);})
+    .attr('cx', function(d){return xScale(d.x); })
+    .attr('cy', function(d){return yScale(d.y); })
+    .each('end', function(){
+        d3.select(this)
+        .transition()
+        .duration(100)
+        .attr('fill', secondaryColor)
+        .attr('r', '3')
+        });
+}
+
 function init() {
     w = document.getElementById('handViz').offsetWidth - padding;
     var svg = d3.select("#handViz").append('svg').attr("width",w).attr('height',h);
@@ -110,6 +165,12 @@ function init() {
 
     });
 
+    d3.select("#content").on('mouseover', function(){
+        currentHandIndex = 10;
+        hand = hands[currentHandIndex];
+        updateHand();
+    })
+
 
     var my_data1 = d3.text("../../data/hands_pca.csv", function(text){
         var div = d3.select("body").append("div")
@@ -170,62 +231,10 @@ function init() {
                   .duration(500)
                   .style("opacity", 0);
             })
-            .on('click', function(){
-                currentHandIndex = Math.floor(Math.random()*hands.length)
-                console.log("Current Index: "  + currentHandIndex);
+            .on('click', function(d, i){
+                currentHandIndex = i;
                 hand = hands[currentHandIndex];
-
-                handLines.selectAll('line').data(hand)
-                .transition()
-                .duration(500)
-                .ease("elastic")
-                .each("start", function(){
-                    d3.select(this)
-                    .attr('stroke-width', lineWidth * 2)
-                    .attr("stroke", complemColor);})
-                    .attr('x1', function(d, i){
-                        if(i > 0){
-                            return xScale(hands[currentHandIndex][i-1].x);
-                        }
-                        else{
-                            return xScale(d.x);
-                        }
-                        })
-                    .attr('y1', function(d, i){
-                        if(i > 0){
-                            return yScale(hands[currentHandIndex][i-1].y);
-                        }
-                        else{
-                            return yScale(d.y);
-                        }
-                    })
-                    .attr('x2', function(d){ return xScale(d.x)})
-                    .attr('y2', function(d){ return yScale(d.y)
-                })
-                .each('end', function(){
-                    d3.select(this)
-                    .transition()
-                    .duration(100)
-                    .attr('stroke-width', lineWidth)
-                    .attr('stroke', secondaryColor)}
-                );
-
-                handCircles.selectAll('circle').data(hand)
-                .transition()
-                .duration(500)
-                .ease("elastic")
-                .each("start", function(){d3.select(this)
-                        .attr('r', cirleRad*2)
-                        .attr("fill", complemColor);})
-                .attr('cx', function(d){return xScale(d.x); })
-                .attr('cy', function(d){return yScale(d.y); })
-                .each('end', function(){
-                    d3.select(this)
-                    .transition()
-                    .duration(100)
-                    .attr('fill', secondaryColor)
-                    .attr('r', '3')
-                    });
+                updateHand();
             });
     });
 };

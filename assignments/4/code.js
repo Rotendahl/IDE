@@ -240,7 +240,9 @@ function init() {
             .attr('cy', function(d){ return sy(d.y); })
             .style("fill", primaryColor)
             .on("mouseover", function(d, i ) {
-                console.log(i);
+                currentHandIndex = i;
+                hand = hands[currentHandIndex];
+                updateHand();
 
               div.transition()
                   .duration(200)
@@ -256,10 +258,5 @@ function init() {
                   .duration(500)
                   .style("opacity", 0);
             })
-            .on('click', function(d, i){
-                currentHandIndex = i;
-                hand = hands[currentHandIndex];
-                updateHand();
-            });
     });
 };

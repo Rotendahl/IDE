@@ -87,7 +87,9 @@ function init() {
         var crimeData = d3.csv("../../data/robberies.csv", function(csv_data) {
             // Crime per weekday
             for (var i = 0; i < csv_data.length; i++) {
-                robberiesByDay[csv_data[i].DayOfWeek].points.push(csv_data[i]);
+                if(robberiesByDay[csv_data[i].DayOfWeek]){
+                    robberiesByDay[csv_data[i].DayOfWeek].points.push(csv_data[i]);
+                }
             }
 
             for (day in robberiesByDay){
@@ -109,8 +111,8 @@ function init() {
                 max = max > tempMax ? max : tempMax;
             }
 
-            colorScale.domain([min, max])
-            .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+            colorScale.domain([0, max])
+            .range(['white', 'red']);
             for (var i = 0; i < json.features.length; i++) {
                 for (var j = 0; j < robberiesByDay.Monday.values.length ; j++) {
                     if(robberiesByDay.Monday.values[j].key === json.features[i].properties.district){

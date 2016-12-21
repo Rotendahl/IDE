@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Assignment 2</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+    <style>
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 100px;
+        height: 28px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
+
+      #map{
+          border: 2px solid #ff884c;
+          margin: auto;
+          width: 90%;
+      }
+    </style>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="code.js"></script>
+  </head>
+
+<body>
+<div id="header" class="text">
+    <h3 style="text-align: center">Show of hands</h3>
+    <p>
+        Her er et kort.
+    </p>
+</div>
+
+<div id="map"></div>
+
+
+<div id="content" class="text">
+  Vi har lavet et kort!
+</div>
+
+
+</body>
+</html>

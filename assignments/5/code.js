@@ -20,48 +20,106 @@ var path = d3.geo.path().projection(projection);
 var colorScale = d3.scale.linear();
 
 var mergedData = []
-//
-// var colorScale = d3.scale.linear().domain([0,10]).interpolate(d3.interpolateHcl)
-//       .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+
+var pointGroup;
+
+var json;
+
+var robberiesByDay = {
+    'Monday'    : {points :[]},
+    'Tuesday'   : {points :[]},
+    'Wednesday' : {points :[]},
+    'Thursday'  : {points :[]},
+    'Friday'    : {points :[]},
+    'Saturday'  : {points :[]},
+    'Sunday'    : {points :[]}
+};
+
+
+var updatePoints = function(robberies, json1){
+    console.log(robberies);
+    for (var i = 0; i < json1.features.length; i++) {
+        for (var j = 0; j < robberies.values.length ; j++) {
+            if(robberies.values[j].key === json1.features[i].properties.district){
+                json1.features[i].properties.value =
+                    robberies.values[j].values;
+                    console.log("HERHEHREHEHREHHR");
+                break;
+            }
+        }
+    }
+    districts.selectAll("path")
+    .data(json1.features)
+    .attr("d", path)
+    .style("fill", function(d){
+        if(d.properties.value){
+            return colorScale(d.properties.value);
+        }
+        else{
+            return "grey";
+        }
+    } );
+    pointGroup.selectAll('circle').data(robberies.points)
+    .transition()
+    .duration(0)
+    .attr('cx', function(d){return projection([d.X, d.Y])[0];})
+    .attr('cy', function(d){return projection([d.X, d.Y])[1];})
+}
 
 
 
 function init() {
+
     w = document.getElementById('map').offsetWidth - padding;
     var svg = d3.select("#map").append('svg').attr("width",w).attr('height',h);
     districts = svg.append('g').attr("id", "districts");
     var districtsData = d3.json("../../data/districts.geojson", function(json){
+        json = json;
+        d3.select("#knap").on('click', function(){
+            updatePoints(robberiesByDay.Friday, json);
+        })
         var b = path.bounds( json );
         var s = .95 / Math.max((b[1][0] - b[0][0]) / w, (b[1][1] - b[0][1]) / h);
         var t = [(w - s * (b[1][0] + b[0][0])) / 2, (h - s * (b[1][1] + b[0][1])) / 2];
         // Update the projection
         projection.scale(s).translate(t);
 
-        console.log(json.features.length);
-        var crimeData = d3.csv("../../data/crime.csv", function(csv_data) {
-            var nested_data = d3.nest()
-            .key(function(d) {return d.PdDistrict; })
-            .rollup(function(leaves) { return leaves.length; })
-            .entries(csv_data);
+        var crimeData = d3.csv("../../data/robberies.csv", function(csv_data) {
+            // Crime per weekday
+            for (var i = 0; i < csv_data.length; i++) {
+                robberiesByDay[csv_data[i].DayOfWeek].points.push(csv_data[i]);
+            }
 
-            colorScale.domain([
-                d3.min(nested_data, function (d){ return d.values}),
-                d3.max(nested_data, function (d){ return d.values}),
-            ])
+            for (day in robberiesByDay){
+                robberiesByDay[day].values =
+                    d3.nest()
+                    .key(function(d) {return d.PdDistrict; })
+                    .rollup(function(leaves) { return leaves.length; })
+                    .entries(robberiesByDay[day].points);
+            }
+
+            var min = d3.min(robberiesByDay.Monday.values, function (d){ return d.values});
+            var max = d3.max(robberiesByDay.Monday.values, function (d){ return d.values});
+
+            for (day in robberiesByDay){
+                tempMin = d3.min(robberiesByDay[day].values, function (d){ return d.values});
+                tempMax = d3.max(robberiesByDay[day].values, function (d){ return d.values});
+
+                min = min < tempMin ? min : tempMin;
+                max = max > tempMax ? max : tempMax;
+            }
+
+            colorScale.domain([min, max])
             .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
-
             for (var i = 0; i < json.features.length; i++) {
-
-
-                for (var j = 0; j < nested_data.length; j++) {
-                    if(nested_data[j].key === json.features[i].properties.district){
-                        json.features[i].properties.value = nested_data[j].values;
+                for (var j = 0; j < robberiesByDay.Monday.values.length ; j++) {
+                    if(robberiesByDay.Monday.values[j].key === json.features[i].properties.district){
+                        json.features[i].properties.value =
+                            robberiesByDay.Monday.values[j].values;
                         break;
                     }
                 }
             }
-
-
             districts.selectAll("path")
             .data(json.features)
             .enter()
@@ -75,6 +133,21 @@ function init() {
                     return "grey";
                 }
             } );
+
+            pointGroup = svg.append('g').attr("id", "pointGroup");
+            pointGroup.selectAll("circle")
+           .data(robberiesByDay.Monday.points)
+           .enter()
+           .append("circle")
+           .attr("cx", function(d) {
+                   return projection([d.X, d.Y])[0];
+           })
+           .attr("cy", function(d) {
+                   return projection([d.X, d.Y])[1];
+           })
+           .attr("r", 3)
+           .style("fill", "black")
+           .style("opacity", 0.75);
         });
     });
 };

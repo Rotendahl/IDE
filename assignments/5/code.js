@@ -17,6 +17,9 @@ var projection = d3.geo.albersUsa().translate([0, 0]).scale(1);
 
 var path = d3.geo.path().projection(projection);
 
+var colorScale = d3.scale.linear();
+
+var mergedData = []
 //
 // var colorScale = d3.scale.linear().domain([0,10]).interpolate(d3.interpolateHcl)
 //       .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
@@ -31,34 +34,47 @@ function init() {
         var b = path.bounds( json );
         var s = .95 / Math.max((b[1][0] - b[0][0]) / w, (b[1][1] - b[0][1]) / h);
         var t = [(w - s * (b[1][0] + b[0][0])) / 2, (h - s * (b[1][1] + b[0][1])) / 2];
-
         // Update the projection
         projection.scale(s).translate(t);
 
-        svg.append("rect")
-        .attr("x", w - 100)
-        .attr("y", 100)
-        .attr("heigt", 100)
-        .attr("width", 100);
+        console.log(json.features.length);
+        var crimeData = d3.csv("../../data/crime.csv", function(csv_data) {
+            var nested_data = d3.nest()
+            .key(function(d) {return d.PdDistrict; })
+            .rollup(function(leaves) { return leaves.length; })
+            .entries(csv_data);
+
+            colorScale.domain([
+                d3.min(nested_data, function (d){ return d.values}),
+                d3.max(nested_data, function (d){ return d.values}),
+            ])
+            .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+
+            for (var i = 0; i < json.features.length; i++) {
 
 
-        districts.selectAll("path")
-               .data(json.features)
-               .enter()
-               .append("path")
-               .attr("d", path)
-               .style("fill", "steelblue");
-           });
-    
-    
-    var crimeData = d3.csv("../../data/crime.csv", function(csv_data) {
-    var nested_data = d3.nest()
-      .key(function(d) {return d.PdDistrict; })
-      .rollup(function(leaves) { return leaves.length; })
-        .entries(csv_data);
+                for (var j = 0; j < nested_data.length; j++) {
+                    if(nested_data[j].key === json.features[i].properties.district){
+                        json.features[i].properties.value = nested_data[j].values;
+                        break;
+                    }
+                }
+            }
 
-    console.log(nested_data);
 
+            districts.selectAll("path")
+            .data(json.features)
+            .enter()
+            .append("path")
+            .attr("d", path)
+            .style("fill", function(d){
+                if(d.properties.value){
+                    return colorScale(d.properties.value);
+                }
+                else{
+                    return "grey";
+                }
+            } );
+        });
     });
-
-    };
+};

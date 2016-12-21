@@ -49,5 +49,16 @@ function init() {
                .attr("d", path)
                .style("fill", "steelblue");
            });
+    
+    
+    var crimeData = d3.csv("../../data/crime.csv", function(csv_data) {
+    var nested_data = d3.nest()
+      .key(function(d) {return d.PdDistrict; })
+      .rollup(function(leaves) { return leaves.length; })
+        .entries(csv_data);
+
+    console.log(nested_data);
+
+    });
 
     };

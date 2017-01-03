@@ -63,7 +63,10 @@
 <div id="header" class="text">
     <h3 style="text-align: center">Show of hands</h3>
     <p>
-        Her er et kort.
+        Below is a map of San Fransisco where each dot represents a robbery.
+        The data is from <a href="https://www.kaggle.com/c/sf-crime">Kaggle</a>
+        and has 800,000 criminal incidents which occurred over 12 years,
+        We have extracted all the robberies from the data.
     </p>
     <div id="buttonHolder">
       Pick a Day:
@@ -84,14 +87,28 @@
 
 
 <div id="content" class="text">
- Text her 
+ As seen from the bar chart below the number of robberies that occurred on a
+ given weekday all lie in the interval $[3100, 3500]$.
 </div>
 
 
 <div id="bar"></div>
 
 <div id="content" class="text">
-  text
+  As seen from the bar chart above the number of robberies that occurred on a
+  given weekday all lie in the interval $[3100, 3500]$. The weekend has more
+  robberies than normal with Saturday being the day where one is most likely
+  to be robbed and Monday being the least likely.
+
+  The surprising fact about this graph is that the day of the week has little
+  impact on the likelihood of being robbed, we suspected that one would be more
+  likely to be robbed Friday or Saturday. Which is not the case the
+  probability that someone is robbed on a given Saturday is
+  $\frac{3434}{3\cdot 365} * 100 =  78.40\%$ and the probability of it happing
+  on a monday is $\frac{3198}{3\cdot 365} * 100 =  73.01\%$ which is a small
+  difference.
+
+
 </div>
 
 

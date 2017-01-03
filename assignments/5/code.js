@@ -232,7 +232,7 @@ function init() {
           .attr("transform", "translate(0, " + (h/2 - padding) + ")")
           .call(barxAxsis);
 
-          var barYScale = d3.scale.linear().domain([3100, 3450]).range([h/2 - padding, padding]);
+          var barYScale = d3.scale.linear().domain([1500, 3450]).range([h/2 - padding, padding]);
           var baryAxsis = d3.svg.axis().scale(barYScale).orient("left").ticks(3);
           svgBar.append('g')
           .attr('class', 'barxAxsis')
@@ -240,7 +240,7 @@ function init() {
           .call(baryAxsis);
 
 
-          var barYScale = d3.scale.linear().domain([3100, 3450]).range([padding, h/2 - padding]);
+          var barYScale = d3.scale.linear().domain([1500, 3450]).range([padding, h/2 - padding]);
           svgBar.selectAll("rect")
           .data(barData)
           .enter()

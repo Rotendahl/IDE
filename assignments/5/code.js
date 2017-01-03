@@ -35,15 +35,14 @@ var robberiesByDay = {
     'Sunday'    : {points :[]}
 };
 
+//var allDays = {points : []}
 
 var updatePoints = function(robberies, json1){
-    console.log(robberies);
     for (var i = 0; i < json1.features.length; i++) {
         for (var j = 0; j < robberies.values.length ; j++) {
             if(robberies.values[j].key === json1.features[i].properties.district){
                 json1.features[i].properties.value =
                     robberies.values[j].values;
-                    console.log("HERHEHREHEHREHHR");
                 break;
             }
         }
@@ -75,9 +74,57 @@ function init() {
     districts = svg.append('g').attr("id", "districts");
     var districtsData = d3.json("../../data/districts.geojson", function(json){
         json = json;
-        d3.select("#knap").on('click', function(){
+        d3.select("#Monday").on('click', function(){
+            updatePoints(robberiesByDay.Monday, json);
+            d3.select("#uiDay").text("Showing: Monday");
+            d3.select("#uiNumber").text(
+                'Crimes: ' + robberiesByDay.Monday.points.length
+            );
+        });
+        d3.select("#Tuesday").on('click', function(){
+            updatePoints(robberiesByDay.Tuesday, json);
+            d3.select("#uiDay").text("Showing: Tuesday");
+            d3.select("#uiNumber").text(
+                'Crimes: ' + robberiesByDay.Tuesday.points.length
+            );
+        });
+        d3.select("#Wednesday").on('click', function(){
+            updatePoints(robberiesByDay.Wednesday, json);
+            d3.select("#uiDay").text("Showing: Wednesday");
+            d3.select("#uiNumber").text(
+                'Crimes: ' + robberiesByDay.Wednesday.points.length
+            );
+        });
+        d3.select("#Thursday").on('click', function(){
+            updatePoints(robberiesByDay.Thursday, json);
+            d3.select("#uiDay").text("Showing: Thursday");
+            d3.select("#uiNumber").text(
+                'Crimes: ' + robberiesByDay.Thursday.points.length
+            );
+        });
+        d3.select("#Friday").on('click', function(){
             updatePoints(robberiesByDay.Friday, json);
-        })
+            d3.select("#uiDay").text("Showing: Friday");
+            d3.select("#uiNumber").text(
+                'Crimes: ' + robberiesByDay.Friday.points.length
+            );
+        });
+        d3.select("#Saturday").on('click', function(){
+            updatePoints(robberiesByDay.Saturday, json);
+            d3.select("#uiDay").text("Showing: Saturday");
+            d3.select("#uiNumber").text(
+                'Crimes: ' + robberiesByDay.Saturday.points.length
+            );
+        });
+        d3.select("#Sunday").on('click', function(){
+            updatePoints(robberiesByDay.Sunday, json);
+            d3.select("#uiDay").text("Showing: Sunday");
+            d3.select("#uiNumber").text(
+                'Crimes: ' + robberiesByDay.Sunday.points.length
+            );
+        });
+
+
         var b = path.bounds( json );
         var s = .95 / Math.max((b[1][0] - b[0][0]) / w, (b[1][1] - b[0][1]) / h);
         var t = [(w - s * (b[1][0] + b[0][0])) / 2, (h - s * (b[1][1] + b[0][1])) / 2];
@@ -150,6 +197,49 @@ function init() {
            .attr("r", 3)
            .style("fill", "black")
            .style("opacity", 0.75);
+
+           svg.append('text')
+           .attr('id', "uiDay")
+           .attr('x' ,  20)
+           .attr('y' , h -50 )
+           .text('Showing: Monday');
+
+          svg.append('text')
+          .attr('id', "uiNumber")
+          .attr('x' ,  20)
+          .attr('y' , h -20 )
+          .text('Crimes: ' + robberiesByDay.Monday.points.length);
+
+
+
+          var barData = [];
+
+          for (day in robberiesByDay){
+              barData[barData.length] = robberiesByDay[day].points.length
+          }
+          console.log(barData);
+          var svgBar = d3.select("#bar").append('svg')
+          .attr("width",w)
+          .attr('height',h/2);
+          var barXScale = d3.scale.ordinal()
+          .domain(d3.range(7))
+          .rangeRoundBands([0, w], 0.2);
+          var barYScale = d3.scale.linear().domain([3100, 3450]).range([0, h/2]);
+          svgBar.selectAll("rect")
+          .data(barData)
+          .enter()
+          .append('rect')
+          .attr('x', function(d,i){
+              return barXScale(i);
+          })
+          .attr('y', function(d){
+              return h/2 - barYScale(d);
+          })
+          .attr('fill', 'rgb(255,0,0)')
+          .attr("width", barXScale.rangeBand())
+          .attr("height", function(d,i){
+              return barYScale(d);
+          });
         });
     });
 };

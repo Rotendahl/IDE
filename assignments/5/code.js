@@ -159,6 +159,9 @@ function init() {
                 max = max > tempMax ? max : tempMax;
             }
 
+            console.log(max)
+            console.log(min)
+
             colorScale.domain([0, max])
             .range(['white', 'red']);
             for (var i = 0; i < json.features.length; i++) {
@@ -245,7 +248,7 @@ function init() {
 
          // add the legend now
         var legendFullHeight = h;
-        var legendFullWidth = 75;
+        var legendFullWidth = 90;
 
         var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
 
@@ -264,7 +267,7 @@ function init() {
         var whitered = ["white","red"];
 
         var lcolorScale = d3.scale.linear()
-            .domain(linspace(0, 20, whitered.length))
+            .domain(linspace(0, 60, whitered.length))
             .range(whitered);
 
 
@@ -306,13 +309,13 @@ function init() {
 
         // create a scale and axis for the legend
         var legendScale = d3.scale.linear()
-            .domain([0, 20])
+            .domain([0, 600])
             .range([legendHeight, 0]);
 
         var legendAxis = d3.svg.axis()
             .scale(legendScale)
             .orient("right")
-            .tickValues(d3.range(0, 21,4));
+            .tickValues(d3.range(0, 601, 100));
 
         legendSvg.append("g")
             .attr("class", "legend axis")

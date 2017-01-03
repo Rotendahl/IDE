@@ -159,6 +159,7 @@ function init() {
                 max = max > tempMax ? max : tempMax;
             }
 
+
             colorScale.domain([0, max])
             .range(['white', 'red']);
             for (var i = 0; i < json.features.length; i++) {
@@ -260,7 +261,7 @@ function init() {
 
          // add the legend now
         var legendFullHeight = h;
-        var legendFullWidth = 50;
+        var legendFullWidth = 90;
 
         var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
 
@@ -276,17 +277,17 @@ function init() {
             .attr('transform', 'translate(' + legendMargin.left + ',' +
             legendMargin.top + ')');
 
-        var scale = ["white","red"];
+        var whitered = ["white","red"];
 
-        var colorScale = d3.scale.linear()
-            .domain(linspace(0, 20, scale.length))
-            .range(scale);
+        var lcolorScale = d3.scale.linear()
+            .domain(linspace(0, 60, whitered.length))
+            .range(whitered);
 
 
         // style points
         d3.selectAll('circle')
           .attr('fill', function(d) {
-                return colorScale(d.z);
+                return lcolorScale(d.z);
           });
 
         // append gradient bar
@@ -299,11 +300,11 @@ function init() {
             .attr('y2', '0%')
             .attr('spreadMethod', 'pad');
 
-        var pct = linspace(0, 100, scale.length).map(function(d) {
+        var pct = linspace(0, 100, whitered.length).map(function(d) {
             return Math.round(d) + '%';
         });
 
-        var colourPct = d3.zip(pct, scale);
+        var colourPct = d3.zip(pct, whitered);
 
         colourPct.forEach(function(d) {
             gradient.append('stop')
@@ -315,24 +316,23 @@ function init() {
         legendSvg.append('rect')
             .attr('x1', 0)
             .attr('y1', 0)
-            .attr('width', legendWidth)
+            .attr('width', legendWidth * 2/3)
             .attr('height', legendHeight)
             .style('fill', 'url(#gradient)');
 
         // create a scale and axis for the legend
         var legendScale = d3.scale.linear()
-            .domain([0, 20])
+            .domain([0, 600])
             .range([legendHeight, 0]);
 
         var legendAxis = d3.svg.axis()
             .scale(legendScale)
             .orient("right")
-            .tickValues(d3.range(0, 20))
-            .tickFormat(d3.format("d"));
+            .tickValues(d3.range(0, 601, 100));
 
         legendSvg.append("g")
             .attr("class", "legend axis")
-            .attr("transform", "translate(" + legendWidth + ", 0)")
+            .attr("transform", "translate(" + legendWidth * 2/3 + ", 0)")
             .call(legendAxis);
 
     });

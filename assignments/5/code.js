@@ -159,8 +159,6 @@ function init() {
                 max = max > tempMax ? max : tempMax;
             }
 
-            console.log(max)
-            console.log(min)
 
             colorScale.domain([0, max])
             .range(['white', 'red']);

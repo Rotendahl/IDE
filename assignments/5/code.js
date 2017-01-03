@@ -214,34 +214,49 @@ function init() {
 
 
           var barData = [];
-
+          var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
           for (day in robberiesByDay){
               barData[barData.length] = robberiesByDay[day].points.length
           }
-          console.log(barData);
+
           var svgBar = d3.select("#bar").append('svg')
           .attr("width",w)
           .attr('height',h/2);
           var barXScale = d3.scale.ordinal()
-          .domain(d3.range(7))
-          .rangeRoundBands([0, w], 0.2);
-          var barYScale = d3.scale.linear().domain([3100, 3450]).range([0, h/2]);
+          .domain(days)
+          .rangeRoundBands([padding * 2, w - padding ], 0.2);
+          var barxAxsis = d3.svg.axis().scale(barXScale).orient("bottom");
+          svgBar.append('g')
+          .attr('class', 'barxAxsis')
+          .attr("transform", "translate(0, " + (h/2 - padding) + ")")
+          .call(barxAxsis);
+
+          var barYScale = d3.scale.linear().domain([3100, 3450]).range([h/2 - padding, padding]);
+          var baryAxsis = d3.svg.axis().scale(barYScale).orient("left").ticks(3);
+          svgBar.append('g')
+          .attr('class', 'barxAxsis')
+          .attr("transform", "translate(" + padding * 2 + ",0)")
+          .call(baryAxsis);
+
+
+          var barYScale = d3.scale.linear().domain([3100, 3450]).range([padding, h/2 - padding]);
           svgBar.selectAll("rect")
           .data(barData)
           .enter()
           .append('rect')
           .attr('x', function(d,i){
-              return barXScale(i);
+              return barXScale(days[i]);
           })
           .attr('y', function(d){
-              return h/2 - barYScale(d);
+              return h/2 - padding - barYScale(d);
           })
-          .attr('fill', 'rgb(255,0,0)')
+          .attr('fill', 'rgb(0,0,0)')
           .attr("width", barXScale.rangeBand())
           .attr("height", function(d,i){
               return barYScale(d);
           });
         });
+
 
          // add the legend now
         var legendFullHeight = h;

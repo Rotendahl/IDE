@@ -41,6 +41,19 @@ code {
 
 }
 
+
+.barxAxsis path,
+.barxAxsis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.barxAxsis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
 img {
     width: 500px;
 }

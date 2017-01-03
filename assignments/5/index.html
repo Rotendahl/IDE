@@ -23,6 +23,16 @@
           width: 90%;
       }
 
+      #bar{
+          border: 2px solid black;
+          margin: auto;
+          width: 90%;
+      }
+
+      .map{
+        display: inline-block;
+      }
+
       #buttonHolder{
         text-align: center;
       }
@@ -33,6 +43,8 @@
       }
       #legend-svg{
           vertical-align: top;
+          position: relative;
+          top: 0px;
       }
 
     </style>
@@ -54,23 +66,25 @@
     </p>
 </div>
 
-<div id="map"></div>
-<div id="container">
-    <svg id="legend-svg"></svg>
+<div id="container" class="map">
+  <svg id="legend-svg"></svg>
 </div>
+<div id="map" class="map"><svg id="legend-svg"></svg></div>
+
 
 <div id="content" class="text">
   <div id="buttonHolder">
     Pick a Day:
-      <button type="button" id="Monday" name="Monday">Monday</button>
-      <button type="button" id="Tuesday" name="Tuesday">Tuesday</button>
-      <button type="button" id="Wednesday" name="Wednesday">Wednesday</button>
-      <button type="button" id="Thursday" name="Thursday">Thursday</button>
-      <button type="button" id="Friday" name="Friday">Friday</button>
-      <button type="button" id="Saturday" name="Saturday">Saturday</button>
-      <button type="button" id="Sunday" name="Sunday">Sunday</button>
+    <button type="button" id="Monday" name="Monday">Monday</button>
+    <button type="button" id="Tuesday" name="Tuesday">Tuesday</button>
+    <button type="button" id="Wednesday" name="Wednesday">Wednesday</button>
+    <button type="button" id="Thursday" name="Thursday">Thursday</button>
+    <button type="button" id="Friday" name="Friday">Friday</button>
+    <button type="button" id="Saturday" name="Saturday">Saturday</button>
+    <button type="button" id="Sunday" name="Sunday">Sunday</button>
   </div>
 </div>
+
 
 <div id="bar"></div>
 

@@ -8,12 +8,6 @@ var projection = d3.geo.mercator()
   .scale(1)
   .translate([0,0]);
 
-//var zoom = d3.behavior.zoom()
-//    .translate([width / 2, height / 2])
-//    .scale(scale0)
-//    .scaleExtent([scale0, 8 * scale0])
-//    .on("zoom", zoomed);
-
 var zoom = d3.behavior.zoom()
     .translate([-730, height / 0.1])
     .scale(scale0 * 25)
@@ -42,25 +36,15 @@ d3.json("../../data/kommunertopo.json", function(error, danmark) {
   //width  = document.getElementById('map').offsetWidth;
   // height = document.getElementById('map').offsetHeight;
   if (error) throw error;
+
+  kommuner = danmark.objects.kommuner.geomtries;
+
   console.log(danmark)
   g.append("path")
       .datum({type: "Sphere"})
       .attr("class", "sphere")
       .style('fill', '#A3CCFF')
       .attr("d", path);
-
-  var featureCollection = topojson.feature(danmark, danmark.objects.kommuner);
-  var b = d3.geo.bounds(featureCollection),
-      s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
-      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
-
-      console.log(b)
-      console.log(s)
-      console.log(t)
-
-//projection
-//    .scale(s)
-//    .translate(t);
 
 
   g.append("path")

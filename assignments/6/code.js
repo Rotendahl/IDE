@@ -23,7 +23,7 @@ var path = d3.geo.path()
     .projection(projection);
 
 
-    
+
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -39,9 +39,11 @@ svg.append("rect")
 svg.call(zoom).call(zoom.event);
 
 d3.json("../../data/kommunertopo.json", function(error, danmark) {
+    if (error) throw error;
+    d3.json("../../data/kommunerBefolking.geojson", function(error, people) {
+        if (error) throw error;
   //width  = document.getElementById('map').offsetWidth;
   // height = document.getElementById('map').offsetHeight;
-  if (error) throw error;
   console.log(danmark)
   g.append("path")
       .datum({type: "Sphere"})
@@ -54,25 +56,23 @@ d3.json("../../data/kommunertopo.json", function(error, danmark) {
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
 
-      console.log(b)
-      console.log(s)
-      console.log(t)
+      //console.log("HERE")
+    var geo = topojson.merge(danmark, danmark.objects.kommuner.geometries);
 
-//projection
-//    .scale(s)
-//    .translate(t);
-
+//    console.log("geo")
+    console.log(danmark.objects.kommuner.geometries)
 
   g.append("path")
-      .datum(topojson.merge(danmark, danmark.objects.kommuner.geometries))
+      .datum(geo)
       .attr("class", "land")
-      .style('fill', '#EAEAEA')
+      .style('fill', function(d){return "#FFEBAF"})
       .attr("d", path);
 
   g.append("path")
       .datum(topojson.mesh(danmark, danmark.objects.kommuner, function(a, b) { return a !== b; }))
       .attr("class", "boundary")
       .attr("d", path);
+});
 });
 
 function zoomed() {

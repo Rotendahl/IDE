@@ -2,9 +2,9 @@
 
 var width = 660,
     height = 660,
-    scale0 = (width - 1) / 2 / Math.PI;
+    scale0 = (width - 1) / 1 / Math.PI;
 
-var projection = d3.geo.albers()
+var projection = d3.geo.mercator()
   .scale(1)
   .translate([0,0]);
 
@@ -58,9 +58,9 @@ d3.json("../../data/kommunertopo.json", function(error, danmark) {
       console.log(s)
       console.log(t)
 
-projection
-    .scale(s)
-    .translate(t);
+//projection
+//    .scale(s)
+//    .translate(t);
 
 
   g.append("path")

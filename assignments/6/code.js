@@ -1,13 +1,12 @@
-var w = document.getElementById('map').offsetWidth - padding,
-    height = 960,
-    scale0 = (width - 1) / 2 / Math.PI;
+var width = 660,
+    height = 660,
+    scale0 = (width - 1) / 1 / Math.PI;
 
 var projection = d3.geo.mercator();
 
 var zoom = d3.behavior.zoom()
-    .translate([width / 2, height / 2])
-    .scale(scale0)
-    .scaleExtent([scale0, 8 * scale0])
+    .translate([width / 9000, height / 0.15])
+    .scale(scale0 * 16)
     .on("zoom", zoomed);
 
 var path = d3.geo.path()

@@ -73,6 +73,13 @@
       fill: none;
       pointer-events: all;
     }
+    iframe {
+        margin: auto;
+    }
+    body {
+        text-align: center;
+    }
+
     </style>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
@@ -89,7 +96,8 @@
     <iframe
         sandbox="allow-popups allow-scripts allow-forms allow-same-origin"
         src="./map.html" marginwidth="0" marginheight="0"
-        style="height: 660px; width: 660px;" scrolling="no">
+        style="height: 660px; width: 660px; border: 2px solid black"
+        scrolling="no">
     </iframe>
 
 </body>

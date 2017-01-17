@@ -34,11 +34,13 @@ d3.json("../../data/kommunertopo.json", function(error, danmark) {
   g.append("path")
       .datum({type: "Sphere"})
       .attr("class", "sphere")
+      .style('fill', '#A3CCFF')
       .attr("d", path);
 
   g.append("path")
       .datum(topojson.merge(danmark, danmark.objects.kommuner.geometries))
       .attr("class", "land")
+      .style('fill', '#EAEAEA')
       .attr("d", path);
 
   g.append("path")

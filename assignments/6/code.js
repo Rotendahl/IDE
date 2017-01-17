@@ -8,12 +8,6 @@ var projection = d3.geo.mercator()
   .scale(1)
   .translate([0,0]);
 
-//var zoom = d3.behavior.zoom()
-//    .translate([width / 2, height / 2])
-//    .scale(scale0)
-//    .scaleExtent([scale0, 8 * scale0])
-//    .on("zoom", zoomed);
-
 var zoom = d3.behavior.zoom()
     .translate([-730, height / 0.1])
     .scale(scale0 * 25)
@@ -84,4 +78,3 @@ function zoomed() {
       .attr("d", path);
 }
 
-d3.select(self.frameElement).style("height", height + "px");

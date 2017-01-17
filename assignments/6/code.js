@@ -24,11 +24,11 @@ svg.append("rect")
     .attr("width", width)
     .attr("height", height);
 
-svg
-    .call(zoom)
-    .call(zoom.event);
+svg.call(zoom).call(zoom.event);
 
 d3.json("../../data/kommunertopo.json", function(error, danmark) {
+  //width  = document.getElementById('map').offsetWidth;
+  // height = document.getElementById('map').offsetHeight;
   if (error) throw error;
   console.log(danmark)
   g.append("path")
@@ -57,4 +57,3 @@ function zoomed() {
 }
 
 d3.select(self.frameElement).style("height", height + "px");
-

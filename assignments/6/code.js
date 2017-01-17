@@ -5,8 +5,8 @@ var width = 660,
 var projection = d3.geo.mercator();
 
 var zoom = d3.behavior.zoom()
-    .translate([width / 9000, height / 0.15])
-    .scale(scale0 * 16)
+    .translate([-730, height / 0.1])
+    .scale(scale0 * 25)
     .on("zoom", zoomed);
 
 var path = d3.geo.path()

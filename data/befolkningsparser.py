@@ -25,9 +25,11 @@ with open('befolkning.csv', 'rU') as data:
 with open("kommuner.geojson", 'r') as mapData:
     maps = json.load(mapData)
 
-
-with open('kommunerBefolking.geojson', 'w') as outData:
-        outData.write(json.dumps(maps))
+print(maps)
+#
+# with open('kommunerBefolking.geojson', 'w') as outData:
+#         outData.write(json.dumps(maps))
+#         #outData.write(json.dumps(people))
 
 
 print("Data is saved")

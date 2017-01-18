@@ -108,7 +108,10 @@ function draw(topo) {
 
       })
       .on("mouseout",  function(d,i) {
-        tooltip.classed("hidden", true);
+          div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+//        tooltip.classed("hidden", true);
       });
 
 

@@ -47,6 +47,7 @@
 <body>
   <div id="container"></div>
 
+<p id="y2010"> JEG ER EN KNAP</p>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <script>
@@ -83,6 +84,21 @@ var getPercentage = function(population, startYear, endYear){
   return percentage;
 }
 
+var updateData = function(population, startYear, endYear){
+  risePopulation = getPercentage(population, startYear, endYear);
+  // var kommuner = g.selectAll(".country").data(population)
+  //     .style("fill", function(d, i) { console.log(risePopulation[d.properties.KOMNAVN])
+  //         return colorScale(risePopulation[d.properties.KOMNAVN]['people']);
+  //     });
+  draw(topo);
+}
+
+d3.select("#y2010").on('click', function(){
+  updateData(population, 2008, 2015);
+  console.log("CLICKED");
+});
+
+
 function setup(width, height){
   projection = d3.geo.mercator()
     .scale( width / 0.045 / Math.PI)
@@ -109,20 +125,10 @@ d3.json("/data/mapData.json", function(error, world) {
   var countries = topojson.feature(world, world.objects.kommuner).features;
   population = peopleData;
   //d3.min(data, function(d) { return d.value; }))
-  risePopulation = getPercentage(population, 2008, 2012);
   startYear = 2008;
   endYear = 2009;
-  // for (var kommune in population) {
-  //   for (var year in population[kommune]) {
-  //     if (population[kommune][year] < min){
-  //       min = population[kommune][year]
-  //     };
-  //     if (population[kommune][year] > max){
-  //       max = population[kommune][year]
-  //     };
-  //   }
-  // }
-  colorScale = d3.scale.linear().domain([-20, 0, 20]).range(['blue', 'white','red']);
+  risePopulation = getPercentage(population, startYear, endYear);
+  colorScale = d3.scale.linear().domain([-13, 0, 13]).range(['#7ABFE1', '#F6A548','#E30813']);
   topo = countries;
   draw(topo);
   });

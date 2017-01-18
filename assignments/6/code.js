@@ -9,11 +9,30 @@ var padding = 20;
 var graticule = d3.geo.graticule();
 var tooltip = d3.select("#map").append("div").attr("class", "tooltip")
 .style("opacity", 0);
-
+var colors = ['#7ABFE1', '#F6A548','#E30813'];
+var coloScale;
+var minVal, maxVal;
 
 // Top level variables
 var topo, projection, path, svg, g, population, starYear, endYear;
 var throttleTimer, risePopulation;
+
+// legend
+var legendFullHeight = height;
+var legendFullWidth = 90;
+var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
+
+// use same margins as main plot
+var legendWidth  = legendFullWidth - legendMargin.left - legendMargin.right;
+var legendHeight = legendFullHeight - legendMargin.top - legendMargin.bottom;
+
+
+var legendSvg = d3.select('#legend-svg')
+    .attr('width', legendFullWidth)
+    .attr('height', legendFullHeight)
+    .append('g')
+    .attr('transform', 'translate(' + legendMargin.left + ',' +
+    legendMargin.top + ')');
 
 
 
@@ -22,15 +41,23 @@ setup(width,height);
 d3.json("/data/mapData.json", function(error, denmark) {
 d3.json("/data/kommunerBefolking.geojson", function(error, peopleByRegion) {
     var kommuner = topojson.feature(denmark, denmark.objects.kommuner).features;
-    population = peopleByRegion
-    risePopulation = getPercentage(population, 2008, 2012);
-    startYear = 20006;
+    population = peopleByRegion;
+    startYear = 2006;
     endYear = 2015;
-    minVal = -20; // Make compute function
-    maxVal = 20;
+    topo = kommuner;
+    risePopulation = getPercentage(population, startYear, endYear);
+    pops = []
+    for (var key in risePopulation) {
+       var obj = risePopulation[key];
+       pops.push(obj['people']);
+
+    }
+    pops.push(0);
+    minVal = d3.min(pops);
+    maxVal = d3.max(pops);
     colorScale = d3.scale.linear().domain([minVal, 0, maxVal])
-                 .range(['blue', 'white','red']);
-    draw(kommuner);
+                 .range(colors);
+    draw(topo);
 });});
 
 
@@ -64,6 +91,21 @@ var getPercentage = function(population, startYear, endYear){
   return percentage;
 }
 
+var updateData = function(startYear, endYear){
+    risePopulation = getPercentage(population, startYear, endYear);
+    pops = []
+    for (var key in risePopulation) {
+       var obj = risePopulation[key];
+       pops.push(obj['people']);
+
+    }
+    pops.push(0);
+    minVal = d3.min(pops);
+    maxVal = d3.max(pops);
+    colorScale = d3.scale.linear().domain([minVal, 0, maxVal])
+                 .range(colors);
+    draw(topo);
+}
 
 function redraw() {
     width = document.getElementById('container').offsetWidth;
@@ -110,23 +152,46 @@ function linspace(start, end, n) {
     return out;
 }
 
+// MADEST OF FUNCTIONS
+function plus(theNumber)
+{
+    if(theNumber > 0){
+        return "+" + theNumber;
+    }else{
+        return theNumber.toString();
+    }
+}
+
+function round5up(x)
+{
+    return Math.ceil(x/5)*5;
+}
+
+function round5down(x)
+{
+    return Math.floor(x/5)*5;
+}
+
+d3.select('#slider').call(d3.slider().axis(true).min(2006).max(2015)
+.step(1).value([2006, 2007])
+.on("slide", function(evt, value) {
+    if(value[0] < value[1]){
+        startYear = value[0];
+        endYear   = value[1];
+    }
+    else{
+        startYear = value[1];
+        endYear   = value[0];
+    }
+    d3.select('#range').text(startYear + "-" + endYear);
+    updateData(startYear, endYear);
+}));
+
+
 
 function draw(topo) {
     var kommuner = g.selectAll(".kommuner").data(topo);
 
-     d3.select('#slider').call(d3.slider().axis(true).min(2006).max(2015)
-     .step(1).value([2006, 2007]).on("slide", function(evt, value) {
-         if(value[0] < value[1]){
-             startYear = value[0];
-             endYear   = value[1];
-         }
-         else{
-             startYear = value[1];
-             endYear   = value[0];
-         }
-        d3.select('#range').text(startYear + "-" + endYear);
-        console.log(startYear, endYear);
-     }));
      //console.log(slide.value())
     kommuner.enter().insert("path")
     .attr("class", "kommune")
@@ -135,45 +200,24 @@ function draw(topo) {
     .attr("title", function(d,i) { return d.properties.KOMNAVN; })
     .style("fill", function(d, i) {
           return colorScale(risePopulation[d.properties.KOMNAVN]['people']);
-     });
+    });
 
-     //Offsets for tooltips
-     var offsetL = document.getElementById('container').offsetLeft+20;
-     var offsetT = document.getElementById('container').offsetTop+10;
+    //Offsets for tooltips
+    var offsetL = document.getElementById('container').offsetLeft+20;
+    var offsetT = document.getElementById('container').offsetTop-40;
 
-     //tooltips
+    //tooltips
     kommuner.on("mousemove", function(d,i) {
-         var mouse = d3.mouse(svg.node()).map(function(d) {return parseInt(d);});
-         tooltip.classed("hidden", false).attr("style",
-            "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
+        var mouse = d3.mouse(svg.node()).map(function(d) {return parseInt(d);});
+        tooltip.classed("hidden", false).attr("style",
+            "left:"+(mouse[0])+"px;top:"+(mouse[1] + offsetT)+"px")
          .html(d.properties.KOMNAVN + "<br>" +
-               risePopulation[d.properties.KOMNAVN]['people'].toFixed(2));
+             plus(risePopulation[d.properties.KOMNAVN]['people'].toFixed(2)) +
+             " %");
     })
     .on("mouseout",  function(d,i) {tooltip.style("opacity", 0);});
 
-    // legend
-    var legendFullHeight = height;
-    var legendFullWidth = 90;
-    var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
-
-    // use same margins as main plot
-    var legendWidth  = legendFullWidth - legendMargin.left - legendMargin.right;
-    var legendHeight = legendFullHeight - legendMargin.top - legendMargin.bottom;
-
-
-    w = document.getElementById('map').offsetWidth - padding;
-    var legendSvg = d3.select('#legend-svg')
-        .attr('width', legendFullWidth)
-        .attr('height', legendFullHeight)
-        .append('g')
-        .attr('transform', 'translate(' + legendMargin.left + ',' +
-        legendMargin.top + ')');
-
-    var legscale = ["blue", "white","red"];
-
-    var lcolorScale = d3.scale.linear()
-        .domain(linspace(-10, 10, legscale))
-        .range(legscale);
+    legendSvg.selectAll('*').remove();
 
     // append gradient bar
     var gradient = legendSvg.append('defs')
@@ -185,11 +229,11 @@ function draw(topo) {
         .attr('y2', '0%')
         .attr('spreadMethod', 'pad');
 
-    var pct = linspace(0, 100, legscale.length).map(function(d) {
+    var pct = linspace(0, 100, colors.length).map(function(d) {
         return Math.round(d) + '%';
     });
 
-    var colourPct = d3.zip(pct, legscale);
+    var colourPct = d3.zip(pct, colors);
 
     colourPct.forEach(function(d) {
         gradient.append('stop')
@@ -207,13 +251,13 @@ function draw(topo) {
 
     // create a scale and axis for the legend
     var legendScale = d3.scale.linear()
-        .domain([-20,20])
+        .domain([round5down(minVal),round5up(maxVal)])
         .range([legendHeight, 0]);
 
     var legendAxis = d3.svg.axis()
         .scale(legendScale)
         .orient("right")
-        .tickValues(d3.range(-20, 21, 5));
+        .tickValues(d3.range(round5down(minVal), round5up(maxVal) + 1, 5));
 
     legendSvg.append("g")
         .attr("class", "legend axis")

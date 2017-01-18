@@ -5,7 +5,6 @@ var zoom = d3.behavior.zoom().scaleExtent([1, 250]).on("zoom", move);
 var colorScale;
 var width = document.getElementById('map').offsetWidth;
 var height = width * 0.75;
-var padding = 20;
 var graticule = d3.geo.graticule();
 var tooltip = d3.select("#map").append("div").attr("class", "tooltip")
 .style("opacity", 0);
@@ -20,7 +19,7 @@ var throttleTimer, risePopulation;
 // legend
 var legendFullHeight = height;
 var legendFullWidth = 90;
-var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
+var legendMargin = { top: 20, bottom: 20, left: -40, right: 0 };
 
 // use same margins as main plot
 var legendWidth  = legendFullWidth - legendMargin.left - legendMargin.right;
@@ -28,7 +27,7 @@ var legendHeight = legendFullHeight - legendMargin.top - legendMargin.bottom;
 
 
 var legendSvg = d3.select('#legend-svg')
-    .attr('width', legendFullWidth)
+    .attr('width', legendFullWidth + 50)
     .attr('height', legendFullHeight)
     .append('g')
     .attr('transform', 'translate(' + legendMargin.left + ',' +
@@ -257,6 +256,7 @@ function draw(topo) {
     var legendAxis = d3.svg.axis()
         .scale(legendScale)
         .orient("right")
+        .tickFormat(function(d) { return d + "%"; })
         .tickValues(d3.range(round5down(minVal), round5up(maxVal) + 1, 5));
 
     legendSvg.append("g")

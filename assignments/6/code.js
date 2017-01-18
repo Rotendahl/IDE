@@ -18,15 +18,14 @@ var throttleTimer, risePopulation;
 
 
 setup(width,height);
-console.log(g);
 
 d3.json("/data/mapData.json", function(error, denmark) {
 d3.json("/data/kommunerBefolking.geojson", function(error, peopleByRegion) {
     var kommuner = topojson.feature(denmark, denmark.objects.kommuner).features;
     population = peopleByRegion
     risePopulation = getPercentage(population, 2008, 2012);
-    startYear = 2008;
-    endYear = 2009;
+    startYear = 20006;
+    endYear = 2015;
     minVal = -20; // Make compute function
     maxVal = 20;
     colorScale = d3.scale.linear().domain([minVal, 0, maxVal])
@@ -115,6 +114,20 @@ function linspace(start, end, n) {
 function draw(topo) {
     var kommuner = g.selectAll(".kommuner").data(topo);
 
+     d3.select('#slider').call(d3.slider().axis(true).min(2006).max(2015)
+     .step(1).value([2006, 2007]).on("slide", function(evt, value) {
+         if(value[0] < value[1]){
+             startYear = value[0];
+             endYear   = value[1];
+         }
+         else{
+             startYear = value[1];
+             endYear   = value[0];
+         }
+        d3.select('#range').text(startYear + "-" + endYear);
+        console.log(startYear, endYear);
+     }));
+     //console.log(slide.value())
     kommuner.enter().insert("path")
     .attr("class", "kommune")
     .attr("d", path)

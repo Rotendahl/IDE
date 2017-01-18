@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Urbanisation in Denmark</title>
     <link rel="stylesheet" type="text/css" href="../../style.css">
+    <link rel="stylesheet" type="text/css" href="/d3.slider.css">
     <style>
       div.tooltip {
         position: absolute;
@@ -33,6 +34,7 @@
 
       .map{
         display: inline-block;
+        margin-bottom: 20px;
       }
 
       #buttonHolder{
@@ -61,6 +63,13 @@
       fill: #000;
     }
 
+    .slider {
+        border: 1px solid black;
+        margin:auto;
+        display: inline-block;
+        width:80%;
+    }
+
     .boundary {
       fill: none;
       stroke: #fff;
@@ -86,6 +95,7 @@
     </script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="/d3.slider.js"></script
   </head>
 
 <body>
@@ -106,7 +116,24 @@ recent years.
   <svg id="legend-svg"></svg>
 </div>
 <div id="map" class="map"></div>
+
+
+
+<div class="slideContainer">
+    Showing change in percentage for:
+    <span id="range">2006-2015</span>
+<div>
+
+
+<div class="slideContainer">
+    <div style="float:left; margin-top: -25px; margin-left:25px;">
+        <h5>Year:</h5>
+    </div>
+    <div id="slider", class="slider"></div>
+<div>
+
 <script src="code.js"></script>
+
 
 <div id="content" class="text">
 The map allows you to choose two years and see the percentage difference

@@ -41,8 +41,8 @@ d3.json("/data/mapData.json", function(error, denmark) {
 d3.json("/data/kommunerBefolking.geojson", function(error, peopleByRegion) {
     var kommuner = topojson.feature(denmark, denmark.objects.kommuner).features;
     population = peopleByRegion;
-    startYear = 2006;
-    endYear = 2015;
+    startYear = 2007;
+    endYear = 2010;
     topo = kommuner;
     risePopulation = getPercentage(population, startYear, endYear);
     pops = []

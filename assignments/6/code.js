@@ -172,7 +172,7 @@ function round5down(x)
 }
 
 d3.select('#slider').call(d3.slider().axis(true).min(2006).max(2015)
-.step(1).value([2006, 2007])
+.step(1).value([2007, 2010])
 .on("slide", function(evt, value) {
     if(value[0] < value[1]){
         startYear = value[0];

@@ -100,8 +100,8 @@
 
 <body>
 <div id="header" class="text">
-    <h3 style="text-align: center">Show of hands</h3>
-    <p>
+    <h3 style="text-align: center">Urbanisation in Denmark</h3>
+    <p style="text-align: left">
 The population in a country is rarely steady. As opportunities arise in the
 cities and the countryside offers fewer jobs it is common for people to move
 towards the cities. In Denmark anno 1801 almost 80 % of the population lived in
@@ -112,8 +112,9 @@ business closing and jobs moving away. In recent years we have seen attempts
 at revitalizing "udkantsdanmark" (outer Denmark) by moving government jobs away
 from Copenhagen. We have made a visualization of the population movement in
 recent years. The map allows you to zoom by scrolling and you can also drag the
-map. Below is a slider where you can choose an interval of two years to see the
-population change between them. The slider can be a bit wonky. 
+map. You can also hover the mouse over muncipialities to see its name and change
+in percentages.
+</p>
 </div>
 <div id="container" class="map">
   <svg id="legend-svg"></svg>
@@ -124,7 +125,7 @@ population change between them. The slider can be a bit wonky.
 
 <div class="slideContainer">
     Showing change in percentage for:
-    <span id="range">2006-2015</span>
+    <span id="range">2007-2010</span>
 <div>
 
 
@@ -138,17 +139,25 @@ population change between them. The slider can be a bit wonky.
 <script src="code.js"></script>
 
 
-<div id="content" class="text">
+<div id="content" class="text" style="text-align:left">
 The map allows you to choose two years and see the percentage difference
-in population accross Danish muncipialities. A dark blue indicates a large
-decrease in population and red is a large increase.
-
+in population accross Danish muncipialities, bear in mind that the slider can be
+a bit wonky. A dark blue indicates a large decrease in population and red is a
+large increase in population. The values on the legend bar updates as the
+interval is changed. 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
 We opted for percentage difference instead of the actual difference
 or exact population firstly because the muncipialities vary greatly in size
 and secondly because larger populations see larger growth in numbers without
 people moving. If we had population densities we could show some changes in
 this, but it would not be showing the urbanization.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 </div>
+
 
 
 </body>

@@ -7,7 +7,8 @@ var width = document.getElementById('map').offsetWidth;
 var height = width * 0.75;
 var padding = 20;
 var graticule = d3.geo.graticule();
-var tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden");
+var tooltip = d3.select("#map").append("div").attr("class", "tooltip")
+.style("opacity", 0);
 
 
 // Top level variables
@@ -15,7 +16,6 @@ var topo, projection, path, svg, g, population, starYear, endYear;
 var throttleTimer, risePopulation;
 
 
-// Make the map
 
 setup(width,height);
 console.log(g);
@@ -32,8 +32,6 @@ d3.json("/data/kommunerBefolking.geojson", function(error, peopleByRegion) {
     colorScale = d3.scale.linear().domain([minVal, 0, maxVal])
                  .range(['blue', 'white','red']);
     draw(kommuner);
-
-
 });});
 
 
@@ -131,87 +129,81 @@ function draw(topo) {
      var offsetT = document.getElementById('container').offsetTop+10;
 
      //tooltips
-     countryon("mousemove", function(d,i) {
+    kommuner.on("mousemove", function(d,i) {
          var mouse = d3.mouse(svg.node()).map(function(d) {return parseInt(d);});
          tooltip.classed("hidden", false).attr("style",
             "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
          .html(d.properties.KOMNAVN + "<br>" +
                risePopulation[d.properties.KOMNAVN]['people'].toFixed(2));
-      })
+    })
+    .on("mouseout",  function(d,i) {tooltip.style("opacity", 0);});
 
-      .on("mouseout",  function(d,i) {
-          div.transition()
-          .duration(500)
-          .style("opacity", 0);
-      });
+    // legend
+    var legendFullHeight = height;
+    var legendFullWidth = 90;
+    var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
 
-         // legend
-        var legendFullHeight = height;
-        var legendFullWidth = 90;
-        var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
-
-        // use same margins as main plot
-        var legendWidth  = legendFullWidth - legendMargin.left - legendMargin.right;
-        var legendHeight = legendFullHeight - legendMargin.top - legendMargin.bottom;
+    // use same margins as main plot
+    var legendWidth  = legendFullWidth - legendMargin.left - legendMargin.right;
+    var legendHeight = legendFullHeight - legendMargin.top - legendMargin.bottom;
 
 
-        w = document.getElementById('map').offsetWidth - padding;
-        var legendSvg = d3.select('#legend-svg')
-            .attr('width', legendFullWidth)
-            .attr('height', legendFullHeight)
-            .append('g')
-            .attr('transform', 'translate(' + legendMargin.left + ',' +
-            legendMargin.top + ')');
+    w = document.getElementById('map').offsetWidth - padding;
+    var legendSvg = d3.select('#legend-svg')
+        .attr('width', legendFullWidth)
+        .attr('height', legendFullHeight)
+        .append('g')
+        .attr('transform', 'translate(' + legendMargin.left + ',' +
+        legendMargin.top + ')');
 
-        var legscale = ["blue", "white","red"];
+    var legscale = ["blue", "white","red"];
 
-        var lcolorScale = d3.scale.linear()
-            .domain(linspace(-10, 10, legscale))
-            .range(legscale);
+    var lcolorScale = d3.scale.linear()
+        .domain(linspace(-10, 10, legscale))
+        .range(legscale);
 
+    // append gradient bar
+    var gradient = legendSvg.append('defs')
+        .append('linearGradient')
+        .attr('id', 'gradient')
+        .attr('x1', '0%') // bottom
+        .attr('y1', '100%')
+        .attr('x2', '0%') // to top
+        .attr('y2', '0%')
+        .attr('spreadMethod', 'pad');
 
-        // append gradient bar
-        var gradient = legendSvg.append('defs')
-            .append('linearGradient')
-            .attr('id', 'gradient')
-            .attr('x1', '0%') // bottom
-            .attr('y1', '100%')
-            .attr('x2', '0%') // to top
-            .attr('y2', '0%')
-            .attr('spreadMethod', 'pad');
+    var pct = linspace(0, 100, legscale.length).map(function(d) {
+        return Math.round(d) + '%';
+    });
 
-        var pct = linspace(0, 100, legscale.length).map(function(d) {
-            return Math.round(d) + '%';
-        });
+    var colourPct = d3.zip(pct, legscale);
 
-        var colourPct = d3.zip(pct, legscale);
+    colourPct.forEach(function(d) {
+        gradient.append('stop')
+            .attr('offset', d[0])
+            .attr('stop-color', d[1])
+            .attr('stop-opacity', 1);
+    });
 
-        colourPct.forEach(function(d) {
-            gradient.append('stop')
-                .attr('offset', d[0])
-                .attr('stop-color', d[1])
-                .attr('stop-opacity', 1);
-        });
+    legendSvg.append('rect')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('width', legendWidth * 2/3)
+        .attr('height', legendHeight)
+        .style('fill', 'url(#gradient)');
 
-        legendSvg.append('rect')
-            .attr('x1', 0)
-            .attr('y1', 0)
-            .attr('width', legendWidth * 2/3)
-            .attr('height', legendHeight)
-            .style('fill', 'url(#gradient)');
+    // create a scale and axis for the legend
+    var legendScale = d3.scale.linear()
+        .domain([-20,20])
+        .range([legendHeight, 0]);
 
-        // create a scale and axis for the legend
-        var legendScale = d3.scale.linear()
-            .domain([-20,20])
-            .range([legendHeight, 0]);
+    var legendAxis = d3.svg.axis()
+        .scale(legendScale)
+        .orient("right")
+        .tickValues(d3.range(-20, 21, 5));
 
-        var legendAxis = d3.svg.axis()
-            .scale(legendScale)
-            .orient("right")
-            .tickValues(d3.range(-20, 21, 5));
-
-        legendSvg.append("g")
-            .attr("class", "legend axis")
-            .attr("transform", "translate(" + legendWidth * 2/3 + ", 0)")
-            .call(legendAxis);
+    legendSvg.append("g")
+        .attr("class", "legend axis")
+        .attr("transform", "translate(" + legendWidth * 2/3 + ", 0)")
+        .call(legendAxis);
 }

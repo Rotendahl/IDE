@@ -36,37 +36,46 @@ d3.json("../../data/kommunertopo.json", function(error, danmark) {
     if (error) throw error;
     d3.json("../../data/kommunerBefolking.geojson", function(error, people) {
         if (error) throw error;
-  //width  = document.getElementById('map').offsetWidth;
-  // height = document.getElementById('map').offsetHeight;
-  console.log(danmark)
-  g.append("path")
-      .datum({type: "Sphere"})
-      .attr("class", "sphere")
-      .style('fill', '#A3CCFF')
-      .attr("d", path);
+      //width  = document.getElementById('map').offsetWidth;
+      // height = document.getElementById('map').offsetHeight;
+      console.log(danmark)
+      g.append("path")
+          .datum({type: "Sphere"})
+          .attr("class", "sphere")
+          .style('fill', '#A3CCFF')
+          .attr("d", path);
 
-  var featureCollection = topojson.feature(danmark, danmark.objects.kommuner);
-  var b = d3.geo.bounds(featureCollection),
-      s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
-      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+      var featureCollection = topojson.feature(danmark, danmark.objects.kommuner);
+      console.log(featureCollection)
+      var b = d3.geo.bounds(featureCollection),
+          s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+          t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
 
-      //console.log("HERE")
-    var geo = topojson.merge(danmark, danmark.objects.kommuner.geometries);
+          //console.log("HERE")
+        var geo = topojson.merge(danmark, danmark.objects.kommuner.geometries);
 
-//    console.log("geo")
-    console.log(danmark.objects.kommuner.geometries)
+    //    console.log("geo")
+        console.log(danmark.objects.kommuner.geometries)
 
-  g.append("path")
-      .datum(geo)
-      .attr("class", "land")
-      .style('fill', function(d){return "#FFEBAF"})
-      .attr("d", path);
 
-  g.append("path")
-      .datum(topojson.mesh(danmark, danmark.objects.kommuner, function(a, b) { return a !== b; }))
-      .attr("class", "boundary")
-      .attr("d", path);
-});
+      g.selectAll(".land")
+          .data(featureCollection)
+        .enter().insert("path", ".graticule")
+          .attr("class", "country")
+          .attr("d", path)
+          .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+
+      g.append("path")
+          .datum(geo)
+          .attr("class", "land")
+          .style('fill', function(d){return "#FFEBAF"})
+          .attr("d", path);
+
+      g.append("path")
+          .datum(topojson.mesh(danmark, danmark.objects.kommuner, function(a, b) { return a !== b; }))
+          .attr("class", "boundary")
+          .attr("d", path);
+    });
 });
 
 function zoomed() {

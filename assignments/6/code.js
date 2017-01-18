@@ -14,7 +14,7 @@ var topo,projection,path,svg,g, population, starYear, endYear, risePopulation;
 
 var graticule = d3.geo.graticule();
 
-var tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden");
+var tooltip = d3.select("#map").append("div").attr("class", "tooltip").style("opacity", 0);
 
 setup(width,height);
 
@@ -108,10 +108,10 @@ function draw(topo) {
 
       })
       .on("mouseout",  function(d,i) {
-          div.transition()		
-                .duration(500)		
-                .style("opacity", 0);	
-//        tooltip.classed("hidden", true);
+//          div.transition()		
+//                .duration(500)		
+//                .style("opacity", 0);	
+        tooltip.style("opacity", 0);
       });
 
 
@@ -141,11 +141,6 @@ function draw(topo) {
             .range(legscale);
 
 
-        // style points
-        d3.selectAll('circle')
-          .attr('fill', function(d) {
-                return lcolorScale(d.z);
-          });
 
         // append gradient bar
         var gradient = legendSvg.append('defs')

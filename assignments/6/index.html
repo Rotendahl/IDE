@@ -4,8 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Urbanisation in Denmark</title>
     <link rel="stylesheet" type="text/css" href="../../style.css">
-    <link rel="stylesheet" type="text/css" href="/d3.slider.css">
+    <link rel="stylesheet" type="text/css" href="../../d3.slider.css">
     <style>
+      body {
+          width: 1500px;
+      }
       div.tooltip {
         position: absolute;
         text-align: center;
@@ -95,7 +98,7 @@
     </script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
-    <script src="/d3.slider.js"></script
+    <script src="../../d3.slider.js"></script
   </head>
 
 <body>
@@ -108,18 +111,17 @@ towards the cities. In Denmark anno 1801 almost 80 % of the population lived in
 the countryside but in 2004 more than 85 % were found in cities. This is a
 massive shift over 200 years. What we want to show is that the population have
 not stabilized. People are still moving and small towns are suffering from
-business closing and jobs moving away. In recent years we have seen attempts
+businesses closing and jobs moving away. In recent years we have seen attempts
 at revitalizing "udkantsdanmark" (outer Denmark) by moving government jobs away
 from Copenhagen. We have made a visualization of the population movement in
 recent years. The map allows you to zoom by scrolling and you can also drag the
-map. You can also hover the mouse over muncipialities to see its name and change
-in percentages.
-</p>
+map. Below is a slider where you can choose an interval of two years to see the
+population change between them. The slider can be a bit wonky.
 </div>
 <div id="container" class="map">
   <svg id="legend-svg"></svg>
-</div>
-<div id="map" class="map"></div>
+  </div>
+<div id="map" style="margin" class="map"></div>
 
 
 
@@ -144,7 +146,12 @@ The map allows you to choose two years and see the percentage difference
 in population accross Danish muncipialities, bear in mind that the slider can be
 a bit wonky. A dark blue indicates a large decrease in population and red is a
 large increase in population. The values on the legend bar updates as the
-interval is changed. 
+interval is changed.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+As the map shows the danish population is gathering around the cities, the
+capital of Copenhagen has seen a large increase the smaller cities such as
+Esbjerg, Vejle etc have also seen an increase.
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;
 We opted for percentage difference instead of the actual difference

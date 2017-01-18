@@ -37,8 +37,8 @@ var legendSvg = d3.select('#legend-svg')
 
 setup(width,height);
 
-d3.json("/data/mapData.json", function(error, denmark) {
-d3.json("/data/kommunerBefolking.geojson", function(error, peopleByRegion) {
+d3.json("../../data/mapData.json", function(error, denmark) {
+d3.json("../../data/kommunerBefolking.geojson", function(error, peopleByRegion) {
     var kommuner = topojson.feature(denmark, denmark.objects.kommuner).features;
     population = peopleByRegion;
     startYear = 2007;
